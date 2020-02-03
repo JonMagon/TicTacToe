@@ -1,9 +1,11 @@
 #include "Utils/Assets.h"
 #include "Label.h"
 
+#include <iostream>
+
 void Label::draw(sf::RenderTarget& target, sf::RenderStates states) const {
   states.transform *= getTransform();
-  
+
   sf::Text text(titleText, Assets::Instance().font, 20);
   text.setFillColor(sf::Color::Black);
 

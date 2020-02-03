@@ -12,8 +12,8 @@ protected:
   sf::Vector2f size;
   sf::Vector2f position;
 public:
-  Control(std::wstring title, unsigned int x, unsigned int y) {
-    position = sf::Vector2f(x, y);
+  Control(std::wstring title, sf::Vector2f pos) {
+    position = pos;
     titleText = title;
   };
   void (*onClick) (Game& game) = NULL;

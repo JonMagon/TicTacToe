@@ -5,9 +5,9 @@
 
 class Label : public Control {
 public:
-  Label(std::wstring title) : Label(title, 0, 0) { };
-  Label(std::wstring title, unsigned int x, unsigned int y) :
-    Control(title, x, y) {};
+  Label(std::wstring title) : Label(title, sf::Vector2f()) { };
+  Label(std::wstring title, sf::Vector2f pos) :
+    Control(title, pos) {};
   ~Label() {};
 public:
   virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
