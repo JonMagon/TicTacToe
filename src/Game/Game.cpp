@@ -45,19 +45,13 @@ void Game::draw(sf::RenderTarget& target, sf::RenderStates states) const {
   sf::Color X = sf::Color(200, 100, 200);
   sf::Color O = sf::Color(50, 30, 255);
 
-  // Рамка игрового поля
-  /*sf::RectangleShape shape(sf::Vector2f(FIELD_SIZE, FIELD_SIZE));
-  shape.setOutlineThickness(2.f);
-  shape.setOutlineColor(color);
-  shape.setFillColor(sf::Color::Transparent);
-  target.draw(shape, states);*/
+  /* Отрисовка игрового поля */
 
-  // Отрисовка игрового поля
   for (unsigned int i = 1; i < cellsCount; i++) {
-    // Горизонтальную линию
+    // Горизонтальная линия
     sf::Vector2f position(0, cellSize * i - LINE_WIDTH / 2);
 
-    sf::RectangleShape line(sf::Vector2f(FIELD_SIZE_PX, LINE_WIDTH));
+    sf::RectangleShape line(sf::Vector2f(cellSize * cellsCount, LINE_WIDTH));
     line.setFillColor(sf::Color::Black);
     line.setPosition(position);
 
@@ -73,7 +67,8 @@ void Game::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     target.draw(line, states);
   }
 
-  // Отрисовка ячеек
+  /* Отрисовка состояний ячеек */
+
   for (unsigned int i = 0; i < cellsCount; i++) {
     for (unsigned int j = 0; j < cellsCount; j++) {
       switch (matrix[i][j]) {
