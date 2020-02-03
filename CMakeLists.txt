@@ -20,7 +20,7 @@ endif()
 
 # Find sources, add executable, link libraries
 include_directories(${SFML_INCLUDE_DIRECTORY} ${PROJECT_SOURCE_DIR} ${PROJECT_SOURCE_DIR}/src)
-file(GLOB SOURCES src/*.cpp src/Gui/*.cpp src/Utils/*.cpp)
+file(GLOB SOURCES src/*.cpp src/Gui/*.cpp src/Utils/*.cpp src/Game/*.cpp)
 link_directories(${SFML_LIB_DIRECTORY})
 if(WIN32 AND CMAKE_BUILD_TYPE MATCHES Release)
   add_executable(${PROJECT_NAME} WIN32 ${SOURCES})

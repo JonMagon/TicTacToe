@@ -1,7 +1,7 @@
 #include <SFML/Graphics.hpp>
 
 #include "Utils/Assets.h"
-#include "Game.h"
+#include "Game/Game.h"
 #include "Gui/Gui.h"
 #include "Gui/Button.h"
 #include "Config.h"
@@ -37,7 +37,7 @@ int main() {
     // Загрузка ресурсов
     Assets::Instance().Load();
 
-   const sf::Vector2u designedsize(800,600);
+    const sf::Vector2u designedsize(800,600);
 
     // Создаем окно размером 600 на 600 и частотой обновления 60 кадров в секунду
 
