@@ -23,4 +23,7 @@ public:
   void setSize(sf::Vector2f val) { size = val; }
   void setHovered(bool state) { isHovered = state; }
   void setPressed(bool state) { isPressed = state; }
+  void setTitleText(std::wstring title) {
+    titleText = title;
+  }
 };

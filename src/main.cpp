@@ -2,6 +2,7 @@
 
 #include "Utils/Assets.h"
 #include "Game/Game.h"
+#include "Game/Lookup.h"
 #include "Gui/Gui.h"
 #include "Gui/Button.h"
 #include "Config.h"
@@ -46,7 +47,9 @@ int main() {
     window.setFramerateLimit(60);
 
     // Создаем объект игры
-    Game game;
+    Lookup lookup;
+
+    Game game(lookup);
     game.setPosition(50.f, 50.f);
 
     Gui gui(game);

@@ -13,3 +13,7 @@ const int DEFAULT_FONTSIZE = 17;
 
 const int BUTTON_DEFAULT_WIDTH = 100;
 const int BUTTON_DEFAULT_HEIGHT = 30;
+
+const int WIN = 1000;
+const int DRAW = 0;
+const int LOSS = -1000;

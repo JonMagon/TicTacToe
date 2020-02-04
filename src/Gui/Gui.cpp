@@ -17,8 +17,8 @@ void Gui::Init() {
   auto btnRestart = std::make_shared<Button>(L"Старт", sf::Vector2f(0, labelStart->getPosition().y + 50));
   btnRestart->onClick = [](Game& game) {
     std::cout << "CLICKED" << std::endl;
-    game.matrix[0][0] = StateCell::O;
-    game.resizeMatrix();
+    game.board[0][0] = StateCell::O;
+    game.resizeBoard();
   };
 
   auto btnDefaultConfig = std::make_unique<Button>(L"Перезапуск", sf::Vector2f(0, btnRestart->getPosition().y + 50));
@@ -69,6 +69,8 @@ bool Gui::isPointInside(const std::shared_ptr<Control>& control, sf::Vector2f po
 
 void Gui::draw(sf::RenderTarget& target, sf::RenderStates states) const {
   states.transform *= getTransform();
+
+  if (game.isFinished()) controls[0]->setTitleText(L"Игра завершена");
 
   // Отрисовка элементов GUI
   for (auto const& control: controls)
