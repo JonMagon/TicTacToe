@@ -1,4 +1,5 @@
 #include "Assets.h"
+
 #include "Config.h"
 
 void Assets::Load() {

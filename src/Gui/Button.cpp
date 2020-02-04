@@ -1,7 +1,6 @@
-#include "Utils/Assets.h"
 #include "Button.h"
 
-#include <iostream>
+#include "Utils/Assets.h"
 
 void Button::draw(sf::RenderTarget& target, sf::RenderStates states) const {
   states.transform *= getTransform();

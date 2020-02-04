@@ -3,7 +3,6 @@
 #include <SFML/Graphics.hpp>
 
 // Cинглтон Майерса
-
 class Assets {
 public:
 	sf::Font font;

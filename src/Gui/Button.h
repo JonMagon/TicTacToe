@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Control.h"
+
 #include "Config.h"
 
 class Button : public Control {

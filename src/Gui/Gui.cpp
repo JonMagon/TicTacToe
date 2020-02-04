@@ -1,9 +1,12 @@
 #include "Gui.h"
+
 #include "Game/Game.h"
-#include "Config.h"
+
 #include "Control.h"
 #include "Button.h"
 #include "Label.h"
+
+#include "Config.h"
 
 #include <iostream>
 

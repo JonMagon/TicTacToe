@@ -1,7 +1,6 @@
-#include "Utils/Assets.h"
 #include "Label.h"
 
-#include <iostream>
+#include "Utils/Assets.h"
 
 void Label::draw(sf::RenderTarget& target, sf::RenderStates states) const {
   states.transform *= getTransform();

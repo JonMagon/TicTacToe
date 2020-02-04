@@ -1,11 +1,8 @@
 #include "Lookup.h"
 
-#include "Config.h"
 #include "Game.h"
 
-#include <algorithm>
-#include <vector>
-#include <array>
+#include "Config.h"
 
 #define AI_MARKER StateCell::O
 #define PLAYER_MARKER StateCell::X

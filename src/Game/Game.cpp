@@ -1,10 +1,10 @@
 #include "Game.h"
-#include "Config.h"
-
-#include <iostream>
-#include <math.h>
 
 #include "Lookup.h"
+
+#include "Config.h"
+
+#include <math.h>
 
 Game::Game(Lookup& l) : lookup(l) {
   setCellsCount(DEFAULT_FIELD_SIZE);
