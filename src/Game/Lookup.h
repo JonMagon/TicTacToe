@@ -6,23 +6,21 @@
 
 class Lookup {
 protected:
-  std::vector<std::vector<std::pair<int, int>>> winningStates;
-  std::vector<std::pair<int, int>> getLegalMoves(
+  std::vector<std::vector<std::pair<int, int>>> winning_states_;
+  std::vector<std::pair<int, int>> GetLegalMoves(
     std::vector<std::vector<StateCell>> board);
-  bool isPositionOccupied(
-    std::vector<std::vector<StateCell>> board, std::pair<int, int> pos);
-  std::vector<std::pair<int, int>> getOccupiedPositions(
+  std::vector<std::pair<int, int>> GetOccupiedPositions(
     std::vector<std::vector<StateCell>> board, StateCell marker);
-  bool isBoardFull(std::vector<std::vector<StateCell>> board);
-  bool isGameWon(std::vector<std::pair<int, int>> occupied_positions);
-  StateCell getOpponentMarker(StateCell marker);
-  int getBoardState(
-    std::vector<std::vector<StateCell>> board, StateCell marker);
+  bool IsBoardFull(std::vector<std::vector<StateCell>> board);
+  bool IsGameWon(std::vector<std::pair<int, int>> occupied_positions);
+  StateCell GetOpponentMarker(StateCell marker);
+  int GetBoardState(std::vector<std::vector<StateCell>> board,
+                    StateCell marker);
 public:
   Lookup() {};
-  void fillWinningStates(unsigned int count);
-  std::pair<int, std::pair<int, int>> minimaxOptimization(
-    std::vector<std::vector<StateCell>> board,
-    StateCell marker, int depth, int alpha, int beta);
-  bool isGameDone(std::vector<std::vector<StateCell>> board);
+  void InitializeWinningStates(unsigned int count);
+  bool IsGameDone(std::vector<std::vector<StateCell>> board);
+  std::pair<int, std::pair<int, int>> MinimaxOptimization(
+    std::vector<std::vector<StateCell>> board, StateCell marker, int depth,
+    int alpha, int beta);
 };

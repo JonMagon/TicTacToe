@@ -8,7 +8,7 @@
 #define PLAYER_MARKER StateCell::X
 
 // Заполнение выигрышных состояний
-void Lookup::fillWinningStates(unsigned int count) {
+void Lookup::InitializeWinningStates(unsigned int count) {
   // Строки и колонки
   for (int i = 0; i < count; i++) {
     std::vector<std::pair<int, int>> row;
@@ -17,181 +17,178 @@ void Lookup::fillWinningStates(unsigned int count) {
       row.push_back(std::make_pair(i, j));
       column.push_back(std::make_pair(j, i));
     }
-    winningStates.push_back(row);
-    winningStates.push_back(column);
+    winning_states_.push_back(row);
+    winning_states_.push_back(column);
   }
 
   // Диагонали
-  std::vector<std::pair<int, int>> mainDiagonal;
-  std::vector<std::pair<int, int>> antiDiagonal;
+  std::vector<std::pair<int, int>> main_diagonal;
+  std::vector<std::pair<int, int>> anti_diagonal;
   for (int i = 0; i < count; i++) {
-    mainDiagonal.push_back(std::make_pair(i, i));
-    antiDiagonal.push_back(std::make_pair(count - i - 1, i));
+    main_diagonal.push_back(std::make_pair(i, i));
+    anti_diagonal.push_back(std::make_pair(count - i - 1, i));
   }
-  winningStates.push_back(mainDiagonal);
-  winningStates.push_back(antiDiagonal);
+  winning_states_.push_back(main_diagonal);
+  winning_states_.push_back(anti_diagonal);
 }
 
 // Получение всех свободных ячеек
-std::vector<std::pair<int, int>> Lookup::getLegalMoves
-  (std::vector<std::vector<StateCell>> board) {
-
-  std::vector<std::pair<int, int>> legalMoves;
+std::vector<std::pair<int, int>> Lookup::GetLegalMoves(
+    std::vector<std::vector<StateCell>> board) {
+  std::vector<std::pair<int, int>> legal_moves;
   for (int i = 0; i < board.size(); i++)
     for (int j = 0; j < board.size(); j++)
       if (board[i][j] != AI_MARKER && board[i][j] != PLAYER_MARKER)
-        legalMoves.push_back(std::make_pair(i, j));
+        legal_moves.push_back(std::make_pair(i, j));
 
-  return legalMoves;
+  return legal_moves;
 }
 
 // Получение всех ячеек, занятых крестиком или ноликом
-std::vector<std::pair<int, int>> Lookup::getOccupiedPositions
-  (std::vector<std::vector<StateCell>> board, StateCell marker) {
-
-  std::vector<std::pair<int, int>> occupiedPositions;
+std::vector<std::pair<int, int>> Lookup::GetOccupiedPositions(
+    std::vector<std::vector<StateCell>> board, StateCell marker) {
+  std::vector<std::pair<int, int>> occupied_positions;
 
   for (int i = 0; i < board.size(); i++)
     for (int j = 0; j < board.size(); j++)
       if (marker == board[i][j])
-        occupiedPositions.push_back(std::make_pair(i, j));
+        occupied_positions.push_back(std::make_pair(i, j));
 
-  return occupiedPositions;
+  return occupied_positions;
 }
 
 // Проверка, что на доске нет больше мест
-bool Lookup::isBoardFull(std::vector<std::vector<StateCell>> board) {
-  std::vector<std::pair<int, int>> legalMoves = getLegalMoves(board);
+bool Lookup::IsBoardFull(std::vector<std::vector<StateCell>> board) {
+  std::vector<std::pair<int, int>> legal_moves = GetLegalMoves(board);
 
-  return (0 == legalMoves.size());
+  return (0 == legal_moves.size());
 }
 
 // Проверка, что игра была выиграна
-bool Lookup::isGameWon(std::vector<std::pair<int, int>> occupiedPositions) {
-  bool gameWon;
+bool Lookup::IsGameWon(std::vector<std::pair<int, int>> occupied_positions) {
+  bool game_won;
 
-  for (int i = 0; i < winningStates.size(); i++) {
-    gameWon = true;
-    std::vector<std::pair<int, int>> currWinState = winningStates[i];
+  for (int i = 0; i < winning_states_.size(); i++) {
+    game_won = true;
+    std::vector<std::pair<int, int>> curr_win_state = winning_states_[i];
     for (int j = 0; j < 3; j++) {
-      auto found = std::find(
-        std::begin(occupiedPositions),
-        std::end(occupiedPositions),
-        currWinState[j]
+      // Если ни одна выигрышная позиция не найдена, игра "не выиграна"
+      auto iter = std::find(
+        std::begin(occupied_positions),
+        std::end(occupied_positions),
+        curr_win_state[j]
       );
-      if (found == std::end(occupiedPositions)) {
-        gameWon = false;
+      if (iter == std::end(occupied_positions)) {
+        game_won = false;
         break;
       }
     }
 
-    if (gameWon) break;
+    if (game_won) break;
   }
-  return gameWon;
+  return game_won;
 }
 
-StateCell Lookup::getOpponentMarker(StateCell marker) {
-  StateCell opponentMarker;
+StateCell Lookup::GetOpponentMarker(StateCell marker) {
+  StateCell opponent_marker;
   if (marker == PLAYER_MARKER)
-    opponentMarker = AI_MARKER;
+    opponent_marker = AI_MARKER;
   else
-    opponentMarker = PLAYER_MARKER;
+    opponent_marker = PLAYER_MARKER;
 
-  return opponentMarker;
+  return opponent_marker;
 }
 
 
 // Проверка на выигрыш или проигрыш
-int Lookup::getBoardState
-  (std::vector<std::vector<StateCell>> board, StateCell marker) {
+int Lookup::GetBoardState(std::vector<std::vector<StateCell>> board,
+                          StateCell marker) {
+  StateCell opponent_marker = GetOpponentMarker(marker);
 
-  StateCell opponentMarker = getOpponentMarker(marker);
+  std::vector<std::pair<int, int>> occupied_positions =
+    GetOccupiedPositions(board, marker);
 
-  std::vector<std::pair<int, int>> occupiedPositions =
-    getOccupiedPositions(board, marker);
+  bool is_won = IsGameWon(occupied_positions);
+  if (is_won) return kWin;
 
-  bool is_won = isGameWon(occupiedPositions);
-  if (is_won) return WIN;
+  occupied_positions = GetOccupiedPositions(board, opponent_marker);
 
-  occupiedPositions = getOccupiedPositions(board, opponentMarker);
+  bool is_lost = IsGameWon(occupied_positions);
+  if (is_lost) return kLoss;
 
-  bool is_lost = isGameWon(occupiedPositions);
-  if (is_lost) return LOSS;
+  bool is_full = IsBoardFull(board);
+  if (is_full) return kDraw;
 
-  bool is_full = isBoardFull(board);
-  if (is_full) return DRAW;
-
-  return DRAW;
+  return kDraw;
 }
 
 // Применение минимакс алгоритма
-std::pair<int, std::pair<int, int>> Lookup::minimaxOptimization
-  (std::vector<std::vector<StateCell>> board, StateCell marker, int depth,
-  int alpha, int beta) {
-
+std::pair<int, std::pair<int, int>> Lookup::MinimaxOptimization(
+    std::vector<std::vector<StateCell>> board, StateCell marker, int depth,
+    int alpha, int beta) {
   // Инициализаиция лучшего хода
-  std::pair<int, int> bestMove = std::make_pair(-1, -1);
-  int bestScore = (marker == AI_MARKER) ? LOSS : WIN;
+  std::pair<int, int> best_move = std::make_pair(-1, -1);
+  int best_score = (marker == AI_MARKER) ? kLoss : kWin;
 
   // Если достигнут конец дерева, возврат лучшего результата и хода
-  if (isBoardFull(board) || DRAW != getBoardState(board, AI_MARKER)) {
-    bestScore = getBoardState(board, AI_MARKER);
-    return std::make_pair(bestScore, bestMove);
+  if (IsBoardFull(board) || kDraw != GetBoardState(board, AI_MARKER)) {
+    best_score = GetBoardState(board, AI_MARKER);
+    return std::make_pair(best_score, best_move);
   }
 
-  std::vector<std::pair<int, int>> legalMoves = getLegalMoves(board);
+  std::vector<std::pair<int, int>> legal_moves = GetLegalMoves(board);
 
-  for (int i = 0; i < legalMoves.size(); i++) {
-    std::pair<int, int> currMove = legalMoves[i];
-    board[currMove.first][currMove.second] = marker;
+  for (int i = 0; i < legal_moves.size(); i++) {
+    std::pair<int, int> curr_move = legal_moves[i];
+    board[curr_move.first][curr_move.second] = marker;
 
     // Максимизация стратегии игрока
     if (marker == AI_MARKER) {
       int score =
-        minimaxOptimization(board, PLAYER_MARKER, depth + 1, alpha, beta).first;
+        MinimaxOptimization(board, PLAYER_MARKER, depth + 1, alpha, beta).first;
 
-      if (bestScore < score) {
-        bestScore = score - depth * 10;
-        bestMove = currMove;
+      if (best_score < score) {
+        best_score = score - depth * 10;
+        best_move = curr_move;
 
         // Если лучший ход этой ветви хуже, чем лучший предыдущей,
         // то откидываем её
-        alpha = std::max(alpha, bestScore);
-        board[currMove.first][currMove.second] = StateCell::None;
+        alpha = std::max(alpha, best_score);
+        board[curr_move.first][curr_move.second] = StateCell::None;
         if (beta <= alpha) break;
       }
 
     } // Минимизация стратегии бота
     else {
       int score =
-        minimaxOptimization(board, AI_MARKER, depth + 1, alpha, beta).first;
+        MinimaxOptimization(board, AI_MARKER, depth + 1, alpha, beta).first;
 
-      if (bestScore > score) {
-        bestScore = score + depth * 10;
-        bestMove = currMove;
+      if (best_score > score) {
+        best_score = score + depth * 10;
+        best_move = curr_move;
 
         // Если лучший ход этой ветви хуже, чем лучший предыдущей,
         // то откидываем её
-        beta = std::min(beta, bestScore);
-        board[currMove.first][currMove.second] = StateCell::None;
+        beta = std::min(beta, best_score);
+        board[curr_move.first][curr_move.second] = StateCell::None;
         if (beta <= alpha) break;
       }
 
     }
 
-    board[currMove.first][currMove.second] = StateCell::None; // Отмена хода
+    board[curr_move.first][curr_move.second] = StateCell::None; // Отмена хода
 
   }
 
-  return std::make_pair(bestScore, bestMove);
+  return std::make_pair(best_score, best_move);
 }
 
 // Проверка, что игра завершена
-bool Lookup::isGameDone(std::vector<std::vector<StateCell>> board) {
-  if (isBoardFull(board))
+bool Lookup::IsGameDone(std::vector<std::vector<StateCell>> board) {
+  if (IsBoardFull(board))
     return true;
 
-  if (DRAW != getBoardState(board, AI_MARKER))
+  if (kDraw != GetBoardState(board, AI_MARKER))
     return true;
 
   return false;

@@ -6,52 +6,52 @@
 
 #include <math.h>
 
-Game::Game(Lookup& l) : lookup(l) {
-  setCellsCount(DEFAULT_FIELD_SIZE);
+Game::Game(Lookup& l) : lookup_(l) {
+  SetCellsCount(kDefaultFieldSize);
 }
 
-void Game::setCellsCount(unsigned int count) {
-  cellsCount = count;
-  cellSize = FIELD_SIZE_PX / cellsCount;
-  resizeBoard();
+void Game::SetCellsCount(unsigned int count) {
+  cells_count_ = count;
+  cell_size_ = kFieldSizePx / cells_count_;
+  ResizeBoard();
 
-  lookup.fillWinningStates(count);
+  lookup_.InitializeWinningStates(count);
 }
 
-unsigned int Game::getCellsCount() {
-  return cellsCount;
+unsigned int Game::GetCellsCount() {
+  return cells_count_;
 }
 
-bool Game::isFinished() {
-  return lookup.isGameDone(board);
+bool Game::IsFinished() {
+  return lookup_.IsGameDone(board);
 }
 
-void Game::resizeBoard() {
-  board.resize(cellsCount);
-  for(int i = 0 ; i < cellsCount ; ++i)
-    board[i].resize(cellsCount);
+void Game::ResizeBoard() {
+  board.resize(cells_count_);
+  for(int i = 0 ; i < cells_count_ ; ++i)
+    board[i].resize(cells_count_);
 }
 
 StateCell player = StateCell::X, opponent = StateCell::O;
 
-void Game::mouseButtonPressed(sf::Vector2f point) {
-  if (isFinished()) return;
+void Game::MouseButtonPressed(sf::Vector2f point) {
+  if (IsFinished()) return;
 
   // Вычисление текущей ячейки
-  unsigned int column = (point.x - INDENT_FIELD_X) / (FIELD_SIZE_PX / cellsCount);
-  unsigned int row = (point.y - INDENT_FIELD_Y) / (FIELD_SIZE_PX / cellsCount);
+  unsigned int column = (point.x - kIndentFieldX) / (kFieldSizePx / cells_count_);
+  unsigned int row = (point.y - kIndentFieldY) / (kFieldSizePx / cells_count_);
 
   // Изменение статуса ячейки
-  if ((row < cellsCount && column < cellsCount) &&
+  if ((row < cells_count_ && column < cells_count_) &&
       (board[row][column] == StateCell::None)) {
 
     board[row][column] = player;
 
-    std::pair<int, std::pair<int, int>> aiMove =
-      lookup.minimaxOptimization(board, opponent, 0, LOSS, WIN);
+    std::pair<int, std::pair<int, int>> ai_move =
+      lookup_.MinimaxOptimization(board, opponent, 0, kLoss, kWin);
 
-    if (aiMove.second.first != -1 && aiMove.second.second != -1)
-      board[aiMove.second.first][aiMove.second.second] = opponent;
+    if (ai_move.second.first != -1 && ai_move.second.second != -1)
+      board[ai_move.second.first][ai_move.second.second] = opponent;
   }
 }
 
@@ -65,11 +65,13 @@ void Game::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 
   /* Отрисовка игрового поля */
 
-  for (unsigned int i = 1; i < cellsCount; i++) {
+  for (unsigned int i = 1; i < cells_count_; i++) {
     // Горизонтальная линия
-    sf::Vector2f position(0, cellSize * i - LINE_WIDTH / 2);
+    sf::Vector2f position(0, cell_size_ * i - kLineWidth / 2);
 
-    sf::RectangleShape line(sf::Vector2f(cellSize * cellsCount, LINE_WIDTH));
+    sf::RectangleShape line(
+      sf::Vector2f(cell_size_ * cells_count_, kLineWidth)
+    );
     line.setFillColor(sf::Color::Black);
     line.setPosition(position);
 
@@ -87,28 +89,37 @@ void Game::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 
   /* Отрисовка состояний ячеек */
 
-  for (unsigned int i = 0; i < cellsCount; i++) {
-    for (unsigned int j = 0; j < cellsCount; j++) {
+  for (unsigned int i = 0; i < cells_count_; i++) {
+    for (unsigned int j = 0; j < cells_count_; j++) {
       switch (board[i][j]) {
         case StateCell::X: {
-          sf::Vector2f position(FIELD_SIZE_PX / cellsCount * j, FIELD_SIZE_PX / cellsCount * i);
-
-          sf::RectangleShape shape(sf::Vector2f(40, 40));
-          shape.setOutlineThickness(2.f);
-          shape.setOutlineColor(X);
-          //shape.setFillColor(sf::Color::Transparent);
-          shape.setPosition(position);
-          target.draw(shape, states);
+          float cathet = cell_size_ / sqrt(2);
+          float indent = cell_size_ / 2 - cathet / 2;
+          sf::RectangleShape line(sf::Vector2f(cell_size_, 5));
+          line.setFillColor(sf::Color::Blue);
+          line.rotate(45);
+          line.setPosition(
+            sf::Vector2f(cell_size_ * j + indent, cell_size_ * i + indent)
+          );
+          target.draw(line, states);
+          line.rotate(90);
+          line.setPosition(
+            sf::Vector2f(cell_size_ * j + cathet + indent,
+                         cell_size_ * i + indent)
+          );
+          target.draw(line, states);
           break;
         }
         case StateCell::O: {
-          float radius = cellSize / M_PI;
-          sf::Vector2f position(cellSize * j+ radius / 2, cellSize * i+ radius/2);
+          float radius = cell_size_ / M_PI;
           sf::CircleShape circle;
           circle.setRadius(radius);
           circle.setOutlineColor(sf::Color::Red);
           circle.setOutlineThickness(5);
-          circle.setPosition(position);
+          circle.setPosition(
+            sf::Vector2f(cell_size_ * j + radius / 2,
+                         cell_size_ * i + radius / 2)
+          );
           target.draw(circle, states);
           break;
         }

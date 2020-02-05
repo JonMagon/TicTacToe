@@ -6,10 +6,10 @@
 
 class Button : public Control {
 public:
-  Button(std::wstring title) : Button(title, sf::Vector2f()) { };
-  Button(std::wstring title, sf::Vector2f pos) :
-    Control(title, pos) {
-      size = sf::Vector2f(BUTTON_DEFAULT_WIDTH, BUTTON_DEFAULT_HEIGHT);
+  Button(std::wstring title_text) : Button(title_text, sf::Vector2f()) { };
+  Button(std::wstring title_text, sf::Vector2f position) :
+    Control(title_text, position) {
+      size_ = sf::Vector2f(kButtonDefaultWidth, kButtonDefaultHeight);
     }
   ~Button() {};
 public:

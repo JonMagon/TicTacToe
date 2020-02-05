@@ -3,5 +3,5 @@
 #include "Config.h"
 
 void Assets::Load() {
-	if (!font.loadFromFile(FONT_PATH)) throw;
+	if (!font.loadFromFile(kFontPath)) throw;
 }

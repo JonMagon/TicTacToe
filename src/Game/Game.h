@@ -9,20 +9,19 @@ class Lookup;
 enum class StateCell { None = 0, X = 1, O = 2 };
 
 class Game : public sf::Drawable, public sf::Transformable {
-protected:
-  Lookup& lookup;
-  bool solved;
-  unsigned int cellsCount;
-  float cellSize;
+private:
+  Lookup& lookup_;
+  unsigned int cells_count_;
+  float cell_size_;
 public:
   Game(Lookup& l);
   std::vector<std::vector<StateCell>> board;
-  void resizeBoard();
-  void mouseButtonPressed(sf::Vector2f point);
-  void mouseMoved(sf::Vector2f point) {};
-  void setCellsCount(unsigned int count);
-  bool isFinished();
-  unsigned int getCellsCount();
+  void ResizeBoard();
+  void MouseButtonPressed(sf::Vector2f point);
+  void MouseMoved(sf::Vector2f point) {};
+  void SetCellsCount(unsigned int count);
+  bool IsFinished();
+  unsigned int GetCellsCount();
 public:
   virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 };
