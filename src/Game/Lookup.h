@@ -18,6 +18,7 @@ protected:
                     StateCell marker);
 public:
   Lookup() {};
+  StateCell player_marker = StateCell::X, ai_marker = StateCell::O;
   void InitializeWinningStates(unsigned int count);
   bool IsGameDone(std::vector<std::vector<StateCell>> board);
   std::pair<int, std::pair<int, int>> MinimaxOptimization(

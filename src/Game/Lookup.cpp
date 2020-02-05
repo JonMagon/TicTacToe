@@ -4,8 +4,8 @@
 
 #include "Config.h"
 
-#define AI_MARKER StateCell::O
-#define PLAYER_MARKER StateCell::X
+#define ai_marker StateCell::O
+#define player_markek StateCell::X
 
 // Заполнение выигрышных состояний
 void Lookup::InitializeWinningStates(unsigned int count) {
@@ -38,7 +38,7 @@ std::vector<std::pair<int, int>> Lookup::GetLegalMoves(
   std::vector<std::pair<int, int>> legal_moves;
   for (int i = 0; i < board.size(); i++)
     for (int j = 0; j < board.size(); j++)
-      if (board[i][j] != AI_MARKER && board[i][j] != PLAYER_MARKER)
+      if (board[i][j] != ai_marker && board[i][j] != player_markek)
         legal_moves.push_back(std::make_pair(i, j));
 
   return legal_moves;
@@ -91,10 +91,10 @@ bool Lookup::IsGameWon(std::vector<std::pair<int, int>> occupied_positions) {
 
 StateCell Lookup::GetOpponentMarker(StateCell marker) {
   StateCell opponent_marker;
-  if (marker == PLAYER_MARKER)
-    opponent_marker = AI_MARKER;
+  if (marker == player_markek)
+    opponent_marker = ai_marker;
   else
-    opponent_marker = PLAYER_MARKER;
+    opponent_marker = player_markek;
 
   return opponent_marker;
 }
@@ -128,11 +128,11 @@ std::pair<int, std::pair<int, int>> Lookup::MinimaxOptimization(
     int alpha, int beta) {
   // Инициализаиция лучшего хода
   std::pair<int, int> best_move = std::make_pair(-1, -1);
-  int best_score = (marker == AI_MARKER) ? kLoss : kWin;
+  int best_score = (marker == ai_marker) ? kLoss : kWin;
 
   // Если достигнут конец дерева, возврат лучшего результата и хода
-  if (IsBoardFull(board) || kDraw != GetBoardState(board, AI_MARKER)) {
-    best_score = GetBoardState(board, AI_MARKER);
+  if (IsBoardFull(board) || kDraw != GetBoardState(board, ai_marker)) {
+    best_score = GetBoardState(board, ai_marker);
     return std::make_pair(best_score, best_move);
   }
 
@@ -143,9 +143,9 @@ std::pair<int, std::pair<int, int>> Lookup::MinimaxOptimization(
     board[curr_move.first][curr_move.second] = marker;
 
     // Максимизация стратегии игрока
-    if (marker == AI_MARKER) {
+    if (marker == ai_marker) {
       int score =
-        MinimaxOptimization(board, PLAYER_MARKER, depth + 1, alpha, beta).first;
+        MinimaxOptimization(board, player_markek, depth + 1, alpha, beta).first;
 
       if (best_score < score) {
         best_score = score - depth * 10;
@@ -161,7 +161,7 @@ std::pair<int, std::pair<int, int>> Lookup::MinimaxOptimization(
     } // Минимизация стратегии бота
     else {
       int score =
-        MinimaxOptimization(board, AI_MARKER, depth + 1, alpha, beta).first;
+        MinimaxOptimization(board, ai_marker, depth + 1, alpha, beta).first;
 
       if (best_score > score) {
         best_score = score + depth * 10;
@@ -188,7 +188,7 @@ bool Lookup::IsGameDone(std::vector<std::vector<StateCell>> board) {
   if (IsBoardFull(board))
     return true;
 
-  if (kDraw != GetBoardState(board, AI_MARKER))
+  if (kDraw != GetBoardState(board, ai_marker))
     return true;
 
   return false;

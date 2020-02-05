@@ -32,8 +32,6 @@ void Game::ResizeBoard() {
     board[i].resize(cells_count_);
 }
 
-StateCell player = StateCell::X, opponent = StateCell::O;
-
 void Game::MouseButtonPressed(sf::Vector2f point) {
   if (IsFinished()) return;
 
@@ -45,23 +43,19 @@ void Game::MouseButtonPressed(sf::Vector2f point) {
   if ((row < cells_count_ && column < cells_count_) &&
       (board[row][column] == StateCell::None)) {
 
-    board[row][column] = player;
+    board[row][column] = lookup_.player_marker;
 
     std::pair<int, std::pair<int, int>> ai_move =
-      lookup_.MinimaxOptimization(board, opponent, 0, kLoss, kWin);
+      lookup_.MinimaxOptimization(board, lookup_.ai_marker, 0, kLoss, kWin);
 
     if (ai_move.second.first != -1 && ai_move.second.second != -1)
-      board[ai_move.second.first][ai_move.second.second] = opponent;
+      board[ai_move.second.first][ai_move.second.second] =
+        lookup_.ai_marker;
   }
 }
 
 void Game::draw(sf::RenderTarget& target, sf::RenderStates states) const {
   states.transform *= getTransform();
-
-  sf::Color color = sf::Color(200, 100, 200);
-  sf::Color None = sf::Color(54, 90, 173);
-  sf::Color X = sf::Color(200, 100, 200);
-  sf::Color O = sf::Color(50, 30, 255);
 
   /* Отрисовка игрового поля */
 
