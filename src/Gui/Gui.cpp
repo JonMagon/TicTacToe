@@ -15,7 +15,7 @@ Gui::Gui(Game& g) : game_(g) {
 }
 
 void Gui::Initialize() {
-  auto label_start = std::make_unique<Label>(L"пип");
+  auto label_start = std::make_shared<Label>(L"пип");
 
   auto btn_restart = std::make_shared<Button>(L"Старт", sf::Vector2f(0, label_start->GetPosition().y + 50));
   btn_restart->OnClick = [](Game& game) {
@@ -24,7 +24,7 @@ void Gui::Initialize() {
     game.ResizeBoard();
   };
 
-  auto btn_default_config = std::make_unique<Button>(L"Перезапуск", sf::Vector2f(0, btn_restart->GetPosition().y + 50));
+  auto btn_default_config = std::make_shared<Button>(L"Перезапуск", sf::Vector2f(0, btn_restart->GetPosition().y + 50));
   btn_default_config->OnClick = [](Game& game) {
     game.SetCellsCount(game.GetCellsCount() + 1);
   };

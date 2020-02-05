@@ -95,17 +95,18 @@ void Game::draw(sf::RenderTarget& target, sf::RenderStates states) const {
         case StateCell::X: {
           float cathet = cell_size_ / sqrt(2);
           float indent = cell_size_ / 2 - cathet / 2;
-          sf::RectangleShape line(sf::Vector2f(cell_size_, 5));
+          sf::RectangleShape line(sf::Vector2f(cell_size_, kMarkerWidth));
           line.setFillColor(sf::Color::Blue);
           line.rotate(45);
           line.setPosition(
-            sf::Vector2f(cell_size_ * j + indent, cell_size_ * i + indent)
+            sf::Vector2f(cell_size_ * j + indent,
+                         cell_size_ * i + indent - kMarkerWidth / 2)
           );
           target.draw(line, states);
           line.rotate(90);
           line.setPosition(
             sf::Vector2f(cell_size_ * j + cathet + indent,
-                         cell_size_ * i + indent)
+                         cell_size_ * i + indent + kMarkerWidth / 2)
           );
           target.draw(line, states);
           break;
@@ -115,7 +116,7 @@ void Game::draw(sf::RenderTarget& target, sf::RenderStates states) const {
           sf::CircleShape circle;
           circle.setRadius(radius);
           circle.setOutlineColor(sf::Color::Red);
-          circle.setOutlineThickness(5);
+          circle.setOutlineThickness(kMarkerWidth);
           circle.setPosition(
             sf::Vector2f(cell_size_ * j + radius / 2,
                          cell_size_ * i + radius / 2)

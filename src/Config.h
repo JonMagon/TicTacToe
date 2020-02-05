@@ -4,6 +4,7 @@ const int kDefaultFieldSize = 3;	// Размер игрового поля в к
 const int kFieldSizePx = 500;		// Размер игрового поля в пикселях
 const int kCellSize = 120;
 const int kLineWidth = 2; // Толщина линий игрового поля
+const int kMarkerWidth = 5; // Толщина крестиков и ноликов
 
 const int kIndentFieldX = 50; // Отступ перед игровым полем по X в пикселях
 const int kIndentFieldY = 50; // Отступ перед игровым полем по X в пикселях
