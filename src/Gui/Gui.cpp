@@ -16,14 +16,35 @@ Gui::Gui(Game& g) : game_(g) {
 
 void Gui::Initialize() {
   auto label_start = std::make_shared<Label>(
-    std::wstring(L"Первый ход делает игрок, ставящий крестики.\n") +
-    std::wstring(L"Размер игрового поля: ")
+    std::wstring(L"Игра \"Крестики-нолики\"\n") +
+    std::wstring(L"Первый ход делает игрок, ставящий крестики.")
   );
 
   auto label_field_size = std::make_shared<Label>(
-    L"",
-    sf::Vector2f(0, 150)
+    L"Размер игрового поля: 10x10", sf::Vector2f(0, 100)
   );
+
+  auto btn_reduce_field = std::make_shared<Button>(L"-",
+    sf::Vector2f(220, label_field_size->GetPosition().y - 5)
+  );
+  btn_reduce_field->SetSize(sf::Vector2f(50, kButtonDefaultHeight));
+  btn_reduce_field->OnClick = [](Game& game) {
+    if (game.GetCellsCount() > 3) {
+      game.SetCellsCount(game.GetCellsCount() - 1);
+      game.ResizeBoard();
+    }
+  };
+
+  auto btn_increase_field = std::make_shared<Button>(L"+",
+    sf::Vector2f(280, label_field_size->GetPosition().y - 5)
+  );
+  btn_increase_field->SetSize(sf::Vector2f(50, kButtonDefaultHeight));
+  btn_increase_field->OnClick = [](Game& game) {
+    if (game.GetCellsCount() < 10) {
+      game.SetCellsCount(game.GetCellsCount() + 1);
+      game.ResizeBoard();
+    }
+  };
 
   auto btn_default_config = std::make_shared<Button>(
     L"Стандартные настройки",
@@ -34,33 +55,15 @@ void Gui::Initialize() {
     game.ResizeBoard();
   };
 
-  auto btn_increase_field = std::make_shared<Button>(
-    L"Больше",
-    sf::Vector2f(0, 300)
-  );
-  btn_increase_field->OnClick = [](Game& game) {
-    if (game.GetCellsCount() < 10) {
-      game.SetCellsCount(game.GetCellsCount() + 1);
-      game.ResizeBoard();
-    }
-  };
 
-  auto btn_reduce_field = std::make_shared<Button>(
-    L"Меньше",
-    sf::Vector2f(150, 300)
-  );
-  btn_reduce_field->OnClick = [](Game& game) {
-    if (game.GetCellsCount() > 3) {
-      game.SetCellsCount(game.GetCellsCount() - 1);
-      game.ResizeBoard();
-    }
-  };
+
 
   controls_.push_back(std::move(label_start));
   controls_.push_back(std::move(label_field_size));
   controls_.push_back(std::move(btn_default_config));
-  controls_.push_back(std::move(btn_increase_field));
   controls_.push_back(std::move(btn_reduce_field));
+  controls_.push_back(std::move(btn_increase_field));
+
 }
 
 void Gui::MouseButtonPressed(sf::Vector2f point) {

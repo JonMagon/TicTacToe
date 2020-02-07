@@ -73,16 +73,20 @@ int main() {
               break;
             }
             case sf::Event::MouseButtonPressed: {
+              if (event.mouseButton.button == sf::Mouse::Left) {
                 // Нажатие произошло внутри игрового поля
                 if (IsInGameField(point))
                   game.MouseButtonPressed(point);
                 else // В противном случае - в гуи
                   gui.MouseButtonPressed(point);
-                break;
               }
+              break;
+            }
             case sf::Event::MouseButtonReleased: {
-              if (!IsInGameField(point))
-                gui.MouseButtonReleased(point);
+              if (event.mouseButton.button == sf::Mouse::Left &&
+                  !IsInGameField(point)) {
+                  gui.MouseButtonReleased(point);
+              }
               break;
             }
             case sf::Event::MouseMoved: {
