@@ -38,11 +38,11 @@ int main() {
     // Загрузка ресурсов
     Assets::Instance().Load();
 
-    const sf::Vector2u designed_size(800,600);
+    const sf::Vector2u designed_size(1000,600);
 
     // Создаем окно размером 600 на 600 и частотой обновления 60 кадров в секунду
 
-    sf::RenderWindow window(sf::VideoMode(800, 600), "Tic-tac-toe");
+    sf::RenderWindow window(sf::VideoMode(1000, 600), "Tic-tac-toe");
     window.setView(calcView(window.getSize(), designed_size));
     window.setFramerateLimit(60);
 

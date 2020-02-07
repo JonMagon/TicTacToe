@@ -27,7 +27,7 @@ void Button::draw(sf::RenderTarget& target, sf::RenderStates states) const {
   text.setFillColor(sf::Color::White);
 
   // Вычисление позиции для текста
-  float title_x = shape.getPosition().x - text.getLocalBounds().left +
+  int title_x = shape.getPosition().x - text.getLocalBounds().left +
     shape.getSize().x / 2 - text.getGlobalBounds().width / 2,
   title_y = shape.getPosition().y - text.getLocalBounds().top +
     shape.getSize().y / 2 - text.getGlobalBounds().height / 2;

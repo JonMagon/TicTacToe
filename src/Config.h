@@ -15,6 +15,7 @@ const int kDefaultFontSize = 17;
 const int kButtonDefaultWidth = 100;
 const int kButtonDefaultHeight = 30;
 
-const int kWin = 1000;
+const int kMaxDepth = 4;
+const int kWin = 1000000;
 const int kDraw = 0;
-const int kLoss = -1000;
+const int kLoss = -1000000;

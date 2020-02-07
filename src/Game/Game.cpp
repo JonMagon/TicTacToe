@@ -1,7 +1,6 @@
 #include "Game.h"
 
 #include "Lookup.h"
-
 #include "Config.h"
 
 #include <math.h>
@@ -27,6 +26,7 @@ bool Game::IsFinished() {
 }
 
 void Game::ResizeBoard() {
+  board.clear();
   board.resize(cells_count_);
   for(int i = 0 ; i < cells_count_ ; ++i)
     board[i].resize(cells_count_);
