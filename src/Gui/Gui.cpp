@@ -20,6 +20,7 @@ void Gui::Initialize() {
     std::wstring(L"Первый ход делает игрок, ставящий крестики.")
   );
 
+  /* Кнопка сброса на стандартные настройки (Config.h) */
   auto btn_default_config = std::make_shared<Button>(
     L"Стандартные настройки",
     sf::Vector2f(0, 50)
@@ -27,67 +28,65 @@ void Gui::Initialize() {
   btn_default_config->SetSize(sf::Vector2f(330, kButtonDefaultHeight));
   btn_default_config->OnClick = [](Game& game, Gui& gui) {
     game.SetCellsCount(kDefaultFieldSize);
-    gui.controls_[3]->SetTitleText(
-      std::to_wstring(kDefaultFieldSize) + L"x" +
-      std::to_wstring(kDefaultFieldSize)
-    );
   };
 
-  auto label_field_size = std::make_shared<Label>(
-    L"Размер игрового поля:", sf::Vector2f(0, 100)
-  );
-  auto label_field_size_val = std::make_shared<Label>(
-    std::to_wstring(kDefaultFieldSize) + L"x" +
-    std::to_wstring(kDefaultFieldSize),
-    sf::Vector2f(170, label_field_size->GetPosition().y)
-  );
+  /* Лейбл для вывода размерности поля */
+  auto label_field_size = std::make_shared<Label>(sf::Vector2f(0, 100));
 
+  /* Кнопка увеличения размерности поля */
   auto btn_reduce_field = std::make_shared<Button>(L"-",
     sf::Vector2f(220, label_field_size->GetPosition().y - 5)
   );
   btn_reduce_field->SetSize(sf::Vector2f(50, kButtonDefaultHeight));
   btn_reduce_field->OnClick = [](Game& game, Gui& gui) {
-    if (game.GetCellsCount() > 3) {
+    if (game.GetCellsCount() > 3)
       game.SetCellsCount(game.GetCellsCount() - 1);
-      gui.controls_[3]->SetTitleText(
-        std::to_wstring(game.GetCellsCount()) + L"x" +
-        std::to_wstring(game.GetCellsCount())
-      );
-    }
   };
 
+  /* Кнопка уменьшения размерности поля */
   auto btn_increase_field = std::make_shared<Button>(L"+",
     sf::Vector2f(280, label_field_size->GetPosition().y - 5)
   );
   btn_increase_field->SetSize(sf::Vector2f(50, kButtonDefaultHeight));
   btn_increase_field->OnClick = [](Game& game, Gui& gui) {
-    if (game.GetCellsCount() < 10) {
+    if (game.GetCellsCount() < 10)
       game.SetCellsCount(game.GetCellsCount() + 1);
-      gui.controls_[3]->SetTitleText(
-        std::to_wstring(game.GetCellsCount()) + L"x" +
-        std::to_wstring(game.GetCellsCount())
-      );
-    }
   };
 
+  /* Лейбл для вывода состояния игры */
+  auto label_status_game = std::make_shared<Label>(L"", sf::Vector2f(0, 150));
 
+  controls_["label_start"] = label_start;
+  controls_["btn_default_config"] = btn_default_config;
+  controls_["label_field_size"] = label_field_size;
+  controls_["btn_reduce_field"] = btn_reduce_field;
+  controls_["btn_increase_field"] = btn_increase_field;
+  controls_["label_status_game"] = label_status_game;
+}
 
-  controls_.push_back(std::move(label_start));
-  controls_.push_back(std::move(btn_default_config));
-  controls_.push_back(std::move(label_field_size));
-  controls_.push_back(std::move(label_field_size_val));
-  controls_.push_back(std::move(btn_reduce_field));
-  controls_.push_back(std::move(btn_increase_field));
+void Gui::ToProcess() {
+  /* Обновление размерности поля */
+  controls_.find("label_field_size")->second->SetTitleText(
+    L"Размер игрового поля: " +
+    std::to_wstring(game_.GetCellsCount()) + L"x" +
+    std::to_wstring(game_.GetCellsCount())
+  );
 
+  /* Обновление состояния игры */
+  controls_.find("label_status_game")->second->SetTitleText(
+    L"Состояние игры: " +
+    std::to_wstring(game_.GetCellsCount()) + L"x" +
+    std::to_wstring(game_.GetCellsCount())
+  );
 }
 
 void Gui::MouseButtonPressed(sf::Vector2f point) {
-  for (auto const& control: controls_)
+  for (const auto& [name, control]: controls_)
     control->SetPressed(IsPointInside(control, point));
 }
 
 void Gui::MouseButtonReleased(sf::Vector2f point) {
-  for (auto const& control: controls_) {
+  for (auto const& [name, control]: controls_) {
     if (IsPointInside(control, point) &&
       (control->GetPressed() && control->OnClick))
         control->OnClick(game_, *this);
@@ -97,7 +96,7 @@ void Gui::MouseButtonReleased(sf::Vector2f point) {
 }
 
 void Gui::MouseMoved(sf::Vector2f point) {
-  for (auto const& control: controls_)
+  for (auto const& [name, control]: controls_)
     control->SetHovered(IsPointInside(control, point));
 }
 
@@ -121,6 +120,6 @@ void Gui::draw(sf::RenderTarget& target, sf::RenderStates states) const {
   //else if (!game_.IsFinished()) controls_[0]->SetTitleText(L"Игра не завершена");
 
   // Отрисовка элементов GUI
-  for (auto const& control: controls_)
+  for (auto const& [name, control]: controls_)
     target.draw(*control, states);
 }

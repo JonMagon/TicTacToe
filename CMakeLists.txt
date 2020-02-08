@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 project(tictactoe)
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 
 # SFML include/library directories
 set(SFML_INCLUDE_DIRECTORY "/usr/include" CACHE PATH "SFML include directory")

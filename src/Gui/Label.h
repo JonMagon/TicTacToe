@@ -6,7 +6,8 @@
 
 class Label : public Control {
 public:
-  Label(std::wstring title_text) : Label(title_text, sf::Vector2f()) { };
+  Label(std::wstring title_text) : Label(title_text, sf::Vector2f()) {};
+  Label(sf::Vector2f position) : Label(std::wstring(), position) {};
   Label(std::wstring title_text, sf::Vector2f position) :
     Control(title_text, position) {};
   ~Label() {};
