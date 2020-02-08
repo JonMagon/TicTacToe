@@ -3,11 +3,9 @@
 #include "Game.h"
 #include "Config.h"
 
-#define ai_marker StateCell::O
-#define player_marker StateCell::X
-
 // Заполнение выигрышных состояний
 void Lookup::InitializeWinningStates(unsigned int count) {
+  winning_states_.clear();
   // Строки и колонки
   for (int i = 0; i < count; i++) {
     std::vector<std::pair<int, int>> row;
@@ -100,7 +98,6 @@ StateCell Lookup::GetOpponentMarker(StateCell marker) {
   return opponent_marker;
 }
 
-
 // Проверка на выигрыш или проигрыш
 int Lookup::GetBoardState(std::vector<std::vector<StateCell>>& board,
                           StateCell marker) {
@@ -132,11 +129,9 @@ std::pair<int, std::pair<int, int>> Lookup::MinimaxOptimization(
   int best_score = (marker == ai_marker) ? kLoss : kWin;
 
   // Если достигнут конец дерева, возврат лучшего результата и хода
-  if (IsBoardFull(board) || kDraw != GetBoardState(board, ai_marker) ||
-      depth >= kMaxDepth) {
-    best_score = GetBoardState(board, ai_marker);
-    return std::make_pair(best_score, best_move);
-  }
+  int board_state = GetBoardState(board, ai_marker);
+  if (IsBoardFull(board) || kDraw != board_state || depth >= kMaxDepth)
+    return std::make_pair(board_state, best_move);
 
   std::vector<std::pair<int, int>> legal_moves = GetLegalMoves(board);
 
