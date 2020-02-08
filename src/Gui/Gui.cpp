@@ -20,18 +20,39 @@ void Gui::Initialize() {
     std::wstring(L"Первый ход делает игрок, ставящий крестики.")
   );
 
+  auto btn_default_config = std::make_shared<Button>(
+    L"Стандартные настройки",
+    sf::Vector2f(0, 50)
+  );
+  btn_default_config->SetSize(sf::Vector2f(330, kButtonDefaultHeight));
+  btn_default_config->OnClick = [](Game& game, Gui& gui) {
+    game.SetCellsCount(kDefaultFieldSize);
+    gui.controls_[3]->SetTitleText(
+      std::to_wstring(kDefaultFieldSize) + L"x" +
+      std::to_wstring(kDefaultFieldSize)
+    );
+  };
+
   auto label_field_size = std::make_shared<Label>(
-    L"Размер игрового поля: 10x10", sf::Vector2f(0, 100)
+    L"Размер игрового поля:", sf::Vector2f(0, 100)
+  );
+  auto label_field_size_val = std::make_shared<Label>(
+    std::to_wstring(kDefaultFieldSize) + L"x" +
+    std::to_wstring(kDefaultFieldSize),
+    sf::Vector2f(170, label_field_size->GetPosition().y)
   );
 
   auto btn_reduce_field = std::make_shared<Button>(L"-",
     sf::Vector2f(220, label_field_size->GetPosition().y - 5)
   );
   btn_reduce_field->SetSize(sf::Vector2f(50, kButtonDefaultHeight));
-  btn_reduce_field->OnClick = [](Game& game) {
+  btn_reduce_field->OnClick = [](Game& game, Gui& gui) {
     if (game.GetCellsCount() > 3) {
       game.SetCellsCount(game.GetCellsCount() - 1);
-      game.ResizeBoard();
+      gui.controls_[3]->SetTitleText(
+        std::to_wstring(game.GetCellsCount()) + L"x" +
+        std::to_wstring(game.GetCellsCount())
+      );
     }
   };
 
@@ -39,28 +60,22 @@ void Gui::Initialize() {
     sf::Vector2f(280, label_field_size->GetPosition().y - 5)
   );
   btn_increase_field->SetSize(sf::Vector2f(50, kButtonDefaultHeight));
-  btn_increase_field->OnClick = [](Game& game) {
+  btn_increase_field->OnClick = [](Game& game, Gui& gui) {
     if (game.GetCellsCount() < 10) {
       game.SetCellsCount(game.GetCellsCount() + 1);
-      game.ResizeBoard();
+      gui.controls_[3]->SetTitleText(
+        std::to_wstring(game.GetCellsCount()) + L"x" +
+        std::to_wstring(game.GetCellsCount())
+      );
     }
   };
-
-  auto btn_default_config = std::make_shared<Button>(
-    L"Стандартные настройки",
-    sf::Vector2f(0, 250)
-  );
-  btn_default_config->OnClick = [](Game& game) {
-    game.SetCellsCount(3);
-    game.ResizeBoard();
-  };
-
 
 
 
   controls_.push_back(std::move(label_start));
-  controls_.push_back(std::move(label_field_size));
   controls_.push_back(std::move(btn_default_config));
+  controls_.push_back(std::move(label_field_size));
+  controls_.push_back(std::move(label_field_size_val));
   controls_.push_back(std::move(btn_reduce_field));
   controls_.push_back(std::move(btn_increase_field));
 
@@ -75,7 +90,7 @@ void Gui::MouseButtonReleased(sf::Vector2f point) {
   for (auto const& control: controls_) {
     if (IsPointInside(control, point) &&
       (control->GetPressed() && control->OnClick))
-        control->OnClick(game_);
+        control->OnClick(game_, *this);
 
     control->SetPressed(false);
   }
