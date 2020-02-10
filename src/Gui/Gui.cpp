@@ -22,12 +22,12 @@ void Gui::Initialize() {
 
   /* Кнопка сброса на стандартные настройки (Config.h) */
   auto btn_default_config = std::make_shared<Button>(
-    L"Стандартные настройки",
-    sf::Vector2f(0, 50)
+    L"Стандартные настройки", sf::Vector2f(0, 50)
   );
   btn_default_config->SetSize(sf::Vector2f(330, kButtonDefaultHeight));
   btn_default_config->OnClick = [](Game& game, Gui& gui) {
     game.SetCellsCount(kDefaultFieldSize);
+    gui.Refresh();
   };
 
   /* Лейбл для вывода размерности поля */
@@ -41,6 +41,7 @@ void Gui::Initialize() {
   btn_reduce_field->OnClick = [](Game& game, Gui& gui) {
     if (game.GetCellsCount() > 3)
       game.SetCellsCount(game.GetCellsCount() - 1);
+      gui.Refresh();
   };
 
   /* Кнопка уменьшения размерности поля */
@@ -51,6 +52,7 @@ void Gui::Initialize() {
   btn_increase_field->OnClick = [](Game& game, Gui& gui) {
     if (game.GetCellsCount() < 10)
       game.SetCellsCount(game.GetCellsCount() + 1);
+      gui.Refresh();
   };
 
   /* Лейбл для вывода состояния игры */
@@ -62,9 +64,11 @@ void Gui::Initialize() {
   controls_["btn_reduce_field"] = btn_reduce_field;
   controls_["btn_increase_field"] = btn_increase_field;
   controls_["label_status_game"] = label_status_game;
+
+  Refresh();
 }
 
-void Gui::ToProcess() {
+void Gui::Refresh() {
   /* Обновление размерности поля */
   controls_.find("label_field_size")->second->SetTitleText(
     L"Размер игрового поля: " +
