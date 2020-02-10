@@ -13,7 +13,7 @@ public:
     Control(title_text, position) {
       size_ = sf::Vector2f(kCheckboxDefaultWidth, kCheckboxDefaultHeight);
     }
-  void ChangeCheckedState() { is_checked_ = !is_checked_; }
+  void SetCheckedState(bool state) { is_checked_ = state; }
   bool GetCheckedState() { return is_checked_; }
   ~Checkbox() {};
 public:

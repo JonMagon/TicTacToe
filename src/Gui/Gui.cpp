@@ -25,9 +25,10 @@ void Gui::Initialize() {
   auto btn_default_config = std::make_shared<Button>(
     L"Стандартные настройки", sf::Vector2f(0, 50)
   );
-  btn_default_config->SetSize(sf::Vector2f(330, kButtonDefaultHeight));
+  btn_default_config->SetSize(sf::Vector2f(350, kButtonDefaultHeight));
   btn_default_config->OnClick = [](Control& me, Game& game, Gui& gui) {
     game.SetCellsCount(kDefaultFieldSize);
+    game.SetFirstTurnAI(false);
   };
 
   /* Лейбл для вывода размерности поля */
@@ -35,7 +36,7 @@ void Gui::Initialize() {
 
   /* Кнопка увеличения размерности поля */
   auto btn_reduce_field = std::make_shared<Button>(L"-",
-    sf::Vector2f(220, label_field_size->GetPosition().y - 5)
+    sf::Vector2f(240, label_field_size->GetPosition().y - 5)
   );
   btn_reduce_field->SetSize(sf::Vector2f(50, kButtonDefaultHeight));
   btn_reduce_field->OnClick = [](Control& me, Game& game, Gui& gui) {
@@ -45,7 +46,7 @@ void Gui::Initialize() {
 
   /* Кнопка уменьшения размерности поля */
   auto btn_increase_field = std::make_shared<Button>(L"+",
-    sf::Vector2f(280, label_field_size->GetPosition().y - 5)
+    sf::Vector2f(300, label_field_size->GetPosition().y - 5)
   );
   btn_increase_field->SetSize(sf::Vector2f(50, kButtonDefaultHeight));
   btn_increase_field->OnClick = [](Control& me, Game& game, Gui& gui) {
@@ -56,13 +57,24 @@ void Gui::Initialize() {
   /* Лейбл для вывода состояния игры */
   auto label_status_game = std::make_shared<Label>(L"", sf::Vector2f(0, 150));
 
+  /* Чекбокс, передащий право первого хода компьютеру */
   auto checkbox_first_ai = std::make_shared<Checkbox>(
     L"Первый ходит компьютер",
     sf::Vector2f(0, 200)
   );
   checkbox_first_ai->OnClick = [](Control& me, Game& game, Gui& gui) {
-    ((Checkbox*)&me)->ChangeCheckedState();
-    game.SetFirstTurnAI(((Checkbox*)&me)->GetCheckedState());
+    bool is_checked = !((Checkbox*)&me)->GetCheckedState();
+    ((Checkbox*)&me)->SetCheckedState(is_checked);
+    game.SetFirstTurnAI(is_checked);
+  };
+
+  /* Кнопка перезапуска игры */
+  auto btn_restart_game = std::make_shared<Button>(
+    L"Перезапуск игры", sf::Vector2f(0, 250)
+  );
+  btn_restart_game->SetSize(sf::Vector2f(350, kButtonDefaultHeight));
+  btn_restart_game->OnClick = [](Control& me, Game& game, Gui& gui) {
+    game.ResizeBoard();
   };
 
   controls_["label_start"] = label_start;
@@ -72,6 +84,7 @@ void Gui::Initialize() {
   controls_["btn_increase_field"] = btn_increase_field;
   controls_["label_status_game"] = label_status_game;
   controls_["checkbox_first_ai"] = checkbox_first_ai;
+  controls_["btn_restart_game"] = btn_restart_game;
 }
 
 void Gui::Refresh() {

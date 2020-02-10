@@ -7,29 +7,16 @@
 
 Game::Game(Lookup& l) : lookup_(l) {
   SetCellsCount(kDefaultFieldSize);
-}
-
-void Game::SetCellsCount(unsigned int count) {
-  cells_count_ = count;
-  cell_size_ = kFieldSizePx / cells_count_;
   ResizeBoard();
-
-  lookup_.InitializeWinningStates(count);
-}
-
-unsigned int Game::GetCellsCount() {
-  return cells_count_;
 }
 
 bool Game::IsFinished() {
   return lookup_.IsGameDone(board);
 }
 
-StateCell Game::GetWinner() {
-  return win_state_.first;
-}
-
 void Game::ResizeBoard() {
+  cell_size_ = kFieldSizePx / cells_count_;
+  lookup_.InitializeWinningStates(cells_count_);
   win_state_ =
     std::make_pair(StateCell::None, std::vector<std::pair<int, int>>());
   board.clear();
@@ -47,15 +34,13 @@ void Game::ResizeBoard() {
   }
 }
 
-#include <iostream>
-
 void Game::MouseButtonPressed(sf::Vector2f point) {
   if (IsFinished()) return;
 
   sf::Vector2f point_in_container = point - getPosition();
   // Вычисление текущей ячейки
-  unsigned int column = (point_in_container.x) / (kFieldSizePx / cells_count_);
-  unsigned int row = (point_in_container.y) / (kFieldSizePx / cells_count_);
+  unsigned int column = (point_in_container.x) / (kFieldSizePx / board.size());
+  unsigned int row = (point_in_container.y) / (kFieldSizePx / board.size());
 
   // Изменение статуса ячейки
   if ((row < cells_count_ && column < cells_count_) &&
@@ -78,12 +63,12 @@ void Game::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 
   /* Отрисовка игрового поля */
 
-  for (unsigned int i = 1; i < cells_count_; i++) {
+  for (unsigned int i = 1; i < board.size(); i++) {
     // Горизонтальная линия
     sf::Vector2f position(0, cell_size_ * i - kLineWidth / 2);
 
     sf::RectangleShape line(
-      sf::Vector2f(cell_size_ * cells_count_, kLineWidth)
+      sf::Vector2f(cell_size_ * board.size(), kLineWidth)
     );
     line.setFillColor(sf::Color::Black);
     line.setPosition(position);
@@ -102,8 +87,8 @@ void Game::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 
   /* Отрисовка состояний ячеек */
 
-  for (unsigned int i = 0; i < cells_count_; i++) {
-    for (unsigned int j = 0; j < cells_count_; j++) {
+  for (unsigned int i = 0; i < board.size(); i++) {
+    for (unsigned int j = 0; j < board.size(); j++) {
       switch (board[i][j]) {
         case StateCell::X: {
           // Вычисление смещений по координатам
