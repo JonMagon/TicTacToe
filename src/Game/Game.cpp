@@ -32,6 +32,8 @@ void Game::ResizeBoard() {
     board[i].resize(cells_count_);
 }
 
+#include <iostream>
+
 void Game::MouseButtonPressed(sf::Vector2f point) {
   if (IsFinished()) return;
 
@@ -51,6 +53,8 @@ void Game::MouseButtonPressed(sf::Vector2f point) {
     if (ai_move.second.first != -1 && ai_move.second.second != -1)
       board[ai_move.second.first][ai_move.second.second] =
         lookup_.ai_marker;
+
+    win_state_ = lookup_.GetWinningPosition(board);
   }
 }
 
@@ -124,28 +128,34 @@ void Game::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 
   /* Отрисовка победных состояний */
 
-  sf::Vector2i win_pos_begin(0, 0), win_pos_end(2, 2);
+  if (win_state_.first != StateCell::None) {
+    sf::Vector2f position_begin(
+      cell_size_ * win_state_.second[0].second + cell_size_ / 2,
+      cell_size_ * win_state_.second[0].first + cell_size_ / 2
+    );
+    sf::Vector2f position_end(
+      cell_size_ * win_state_.second[cells_count_ - 1].second + cell_size_ / 2,
+      cell_size_ * win_state_.second[cells_count_ - 1].first + cell_size_ / 2
+    );
 
-  sf::Vector2f position_begin(cell_size_ * win_pos_begin.y + cell_size_ / 2,
-    cell_size_ * win_pos_begin.x + cell_size_ / 2);
-  sf::Vector2f position_end(cell_size_ * win_pos_end.y + cell_size_ / 2,
-    cell_size_ * win_pos_end.x + cell_size_ / 2);
+    sf::RectangleShape line(
+      sf::Vector2f(
+        sqrt(
+          pow(position_end.x - position_begin.x, 2) +
+          pow(position_end.y - position_begin.y, 2)
+        ),
+        kMarkerWidth)
+    );
+    line.setFillColor(
+      win_state_.first == StateCell::O ? sf::Color::Red : sf::Color::Blue
+    );
+    line.setPosition(position_begin);
 
-  sf::RectangleShape line(
-    sf::Vector2f(
-      sqrt(
-        pow(position_end.x - position_begin.x, 2) +
-        pow(position_end.y - position_begin.y, 2)
-      ),
-      kLineWidth)
-  );
-  line.setFillColor(sf::Color::Green);
-  line.setPosition(position_begin);
+    float rad = atan2(position_end.y - position_begin.y,
+      position_end.x - position_begin.x);
 
-  float rad = atan2(position_end.y - position_begin.y,
-    position_end.x - position_begin.x);
+    line.rotate(180 / M_PI * rad);
 
-  line.rotate(180 / M_PI * rad);
-
-  target.draw(line, states);
+    target.draw(line, states);
+  }
 }

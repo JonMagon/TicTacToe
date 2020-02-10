@@ -12,6 +12,7 @@ private:
   Lookup& lookup_;
   unsigned int cells_count_;
   float cell_size_;
+  std::pair<StateCell, std::vector<std::pair<int, int>>> win_state_;
 public:
   Game(Lookup& l);
   std::vector<std::vector<StateCell>> board;

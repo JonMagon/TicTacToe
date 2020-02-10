@@ -62,13 +62,15 @@ bool Lookup::IsBoardFull(std::vector<std::vector<StateCell>>& board) {
 }
 
 // Проверка, что игра была выиграна
-bool Lookup::IsGameWon(std::vector<std::vector<StateCell>>& board,
-                       std::vector<std::pair<int, int>>& occupied_positions) {
+std::pair<bool, std::vector<std::pair<int, int>>> Lookup::IsGameWon(
+    std::vector<std::vector<StateCell>>& board,
+    std::vector<std::pair<int, int>>& occupied_positions) {
   bool game_won;
 
+  std::vector<std::pair<int, int>> curr_win_state;
   for (int i = 0; i < winning_states_.size(); i++) {
     game_won = true;
-    std::vector<std::pair<int, int>> curr_win_state = winning_states_[i];
+    curr_win_state = winning_states_[i];
     for (int j = 0; j < board.size(); j++) {
       // Если ни одна выигрышная позиция не найдена, игра "не выиграна"
       auto iter = std::find(
@@ -85,7 +87,7 @@ bool Lookup::IsGameWon(std::vector<std::vector<StateCell>>& board,
     if (game_won) break;
   }
 
-  return game_won;
+  return std::make_pair(game_won, curr_win_state);
 }
 
 StateCell Lookup::GetOpponentMarker(StateCell marker) {
@@ -106,12 +108,12 @@ int Lookup::GetBoardState(std::vector<std::vector<StateCell>>& board,
   std::vector<std::pair<int, int>> occupied_positions =
     GetOccupiedPositions(board, marker);
 
-  bool is_won = IsGameWon(board, occupied_positions);
+  bool is_won = IsGameWon(board, occupied_positions).first;
   if (is_won) return kWin;
 
   occupied_positions = GetOccupiedPositions(board, opponent_marker);
 
-  bool is_lost = IsGameWon(board, occupied_positions);
+  bool is_lost = IsGameWon(board, occupied_positions).first;
   if (is_lost) return kLoss;
 
   bool is_full = IsBoardFull(board);
@@ -189,4 +191,23 @@ bool Lookup::IsGameDone(std::vector<std::vector<StateCell>>& board) {
     return true;
 
   return false;
+}
+
+std::pair<StateCell, std::vector<std::pair<int, int>>>
+    Lookup::GetWinningPosition(std::vector<std::vector<StateCell>>& board) {
+
+  std::vector<std::pair<int, int>> occupied_positions =
+    GetOccupiedPositions(board, player_marker);
+
+  std::pair<bool, std::vector<std::pair<int, int>>> player_won =
+    IsGameWon(board, occupied_positions);
+  if (player_won.first) return std::make_pair(player_marker, player_won.second);
+
+  occupied_positions = GetOccupiedPositions(board, ai_marker);
+
+  std::pair<bool, std::vector<std::pair<int, int>>> ai_won =
+    IsGameWon(board, occupied_positions);
+  if (ai_won.first) return std::make_pair(ai_marker, ai_won.second);
+
+  return std::make_pair(StateCell::None, std::vector<std::pair<int, int>>());
 }
