@@ -28,7 +28,6 @@ void Gui::Initialize() {
   btn_default_config->SetSize(sf::Vector2f(350, kButtonDefaultHeight));
   btn_default_config->OnClick = [](Control& me, Game& game, Gui& gui) {
     game.SetCellsCount(kDefaultFieldSize);
-    game.SetFirstTurnAI(false);
   };
 
   /* Лейбл для вывода размерности поля */

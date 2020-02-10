@@ -136,8 +136,8 @@ void Game::draw(sf::RenderTarget& target, sf::RenderStates states) const {
       cell_size_ * win_state_.second[0].first + cell_size_ / 2
     );
     sf::Vector2f position_end(
-      cell_size_ * win_state_.second[cells_count_ - 1].second + cell_size_ / 2,
-      cell_size_ * win_state_.second[cells_count_ - 1].first + cell_size_ / 2
+      cell_size_ * win_state_.second[board.size() - 1].second + cell_size_ / 2,
+      cell_size_ * win_state_.second[board.size() - 1].first + cell_size_ / 2
     );
 
     sf::RectangleShape line(
