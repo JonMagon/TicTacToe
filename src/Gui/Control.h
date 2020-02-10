@@ -17,7 +17,7 @@ public:
     title_text_ = title_text;
     position_ = position;
   };
-  void (*OnClick) (Game& game, Gui& gui) = NULL;
+  void (*OnClick) (Control& me, Game& game, Gui& gui) = NULL;
   sf::Vector2f GetSize() { return size_; }
   sf::Vector2f GetPosition() { return position_; }
   bool GetPressed() { return is_pressed_; }

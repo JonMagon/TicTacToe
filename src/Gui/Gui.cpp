@@ -5,6 +5,7 @@
 #include "Control.h"
 #include "Button.h"
 #include "Label.h"
+#include "Checkbox.h"
 #include "Config.h"
 
 #include <iostream>
@@ -25,7 +26,7 @@ void Gui::Initialize() {
     L"Стандартные настройки", sf::Vector2f(0, 50)
   );
   btn_default_config->SetSize(sf::Vector2f(330, kButtonDefaultHeight));
-  btn_default_config->OnClick = [](Game& game, Gui& gui) {
+  btn_default_config->OnClick = [](Control& me, Game& game, Gui& gui) {
     game.SetCellsCount(kDefaultFieldSize);
   };
 
@@ -37,7 +38,7 @@ void Gui::Initialize() {
     sf::Vector2f(220, label_field_size->GetPosition().y - 5)
   );
   btn_reduce_field->SetSize(sf::Vector2f(50, kButtonDefaultHeight));
-  btn_reduce_field->OnClick = [](Game& game, Gui& gui) {
+  btn_reduce_field->OnClick = [](Control& me, Game& game, Gui& gui) {
     if (game.GetCellsCount() > 3)
       game.SetCellsCount(game.GetCellsCount() - 1);
   };
@@ -47,7 +48,7 @@ void Gui::Initialize() {
     sf::Vector2f(280, label_field_size->GetPosition().y - 5)
   );
   btn_increase_field->SetSize(sf::Vector2f(50, kButtonDefaultHeight));
-  btn_increase_field->OnClick = [](Game& game, Gui& gui) {
+  btn_increase_field->OnClick = [](Control& me, Game& game, Gui& gui) {
     if (game.GetCellsCount() < 10)
       game.SetCellsCount(game.GetCellsCount() + 1);
   };
@@ -55,12 +56,22 @@ void Gui::Initialize() {
   /* Лейбл для вывода состояния игры */
   auto label_status_game = std::make_shared<Label>(L"", sf::Vector2f(0, 150));
 
+  auto checkbox_first_ai = std::make_shared<Checkbox>(
+    L"Первый ходит компьютер",
+    sf::Vector2f(0, 200)
+  );
+  checkbox_first_ai->OnClick = [](Control& me, Game& game, Gui& gui) {
+    ((Checkbox*)&me)->ChangeCheckedState();
+    game.SetFirstTurnAI(((Checkbox*)&me)->GetCheckedState());
+  };
+
   controls_["label_start"] = label_start;
   controls_["btn_default_config"] = btn_default_config;
   controls_["label_field_size"] = label_field_size;
   controls_["btn_reduce_field"] = btn_reduce_field;
   controls_["btn_increase_field"] = btn_increase_field;
   controls_["label_status_game"] = label_status_game;
+  controls_["checkbox_first_ai"] = checkbox_first_ai;
 }
 
 void Gui::Refresh() {
@@ -98,7 +109,7 @@ void Gui::MouseButtonReleased(sf::Vector2f point) {
   for (auto const& [name, control]: controls_) {
     if (IsPointInside(control, point) &&
       (control->GetPressed() && control->OnClick))
-        control->OnClick(game_, *this);
+        control->OnClick(*control, game_, *this);
 
     control->SetPressed(false);
   }
@@ -109,7 +120,8 @@ void Gui::MouseMoved(sf::Vector2f point) {
     control->SetHovered(IsPointInside(control, point));
 }
 
-bool Gui::IsPointInside(const std::shared_ptr<Control>& control, sf::Vector2f point) {
+bool Gui::IsPointInside(const std::shared_ptr<Control>& control,
+                        sf::Vector2f point) {
   // Преобразование в координаты внутри GUI
   sf::Vector2f point_in_container = point - getPosition();
   // Получение границ элемента
@@ -124,9 +136,6 @@ bool Gui::IsPointInside(const std::shared_ptr<Control>& control, sf::Vector2f po
 
 void Gui::draw(sf::RenderTarget& target, sf::RenderStates states) const {
   states.transform *= getTransform();
-
-  //if (game_.IsFinished()) controls_[0]->SetTitleText(L"Игра завершена");
-  //else if (!game_.IsFinished()) controls_[0]->SetTitleText(L"Игра не завершена");
 
   // Отрисовка элементов GUI
   for (auto const& [name, control]: controls_)

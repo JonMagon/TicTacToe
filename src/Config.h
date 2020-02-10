@@ -14,6 +14,8 @@ const int kDefaultFontSize = 17;
 
 const int kButtonDefaultWidth = 100;
 const int kButtonDefaultHeight = 30;
+const int kCheckboxDefaultWidth = 20;
+const int kCheckboxDefaultHeight = 20;
 
 const int kMaxDepth = 4;
 const int kWin = 1000000;

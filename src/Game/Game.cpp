@@ -36,6 +36,15 @@ void Game::ResizeBoard() {
   board.resize(cells_count_);
   for(int i = 0 ; i < cells_count_ ; ++i)
     board[i].resize(cells_count_);
+
+  if (is_first_turn_ai_) {
+    lookup_.player_marker = StateCell::O;
+    lookup_.ai_marker = StateCell::X;
+    board[cells_count_ / 2][cells_count_ / 2] = lookup_.ai_marker;
+  } else {
+    lookup_.player_marker = StateCell::X;
+    lookup_.ai_marker = StateCell::O;
+  }
 }
 
 #include <iostream>
@@ -58,8 +67,7 @@ void Game::MouseButtonPressed(sf::Vector2f point) {
       lookup_.MinimaxOptimization(board, lookup_.ai_marker, 0, kLoss, kWin);
 
     if (ai_move.second.first != -1 && ai_move.second.second != -1)
-      board[ai_move.second.first][ai_move.second.second] =
-        lookup_.ai_marker;
+      board[ai_move.second.first][ai_move.second.second] = lookup_.ai_marker;
 
     win_state_ = lookup_.GetWinningPosition(board);
   }
@@ -98,6 +106,7 @@ void Game::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     for (unsigned int j = 0; j < cells_count_; j++) {
       switch (board[i][j]) {
         case StateCell::X: {
+          // Вычисление смещений по координатам
           float cathet = cell_size_ / sqrt(2);
           float indent = cell_size_ / 2 - cathet / 2;
           sf::RectangleShape line(sf::Vector2f(cell_size_, kMarkerWidth));
@@ -136,6 +145,7 @@ void Game::draw(sf::RenderTarget& target, sf::RenderStates states) const {
   /* Отрисовка победных состояний */
 
   if (win_state_.first != StateCell::None) {
+    // Преобразование победного состояния в координаты
     sf::Vector2f position_begin(
       cell_size_ * win_state_.second[0].second + cell_size_ / 2,
       cell_size_ * win_state_.second[0].first + cell_size_ / 2
@@ -158,6 +168,7 @@ void Game::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     );
     line.setPosition(position_begin);
 
+    // Поворот "зачёркивания" на соответствующий угол
     float rad = atan2(position_end.y - position_begin.y,
       position_end.x - position_begin.x);
 

@@ -13,9 +13,11 @@ private:
   unsigned int cells_count_;
   float cell_size_;
   std::pair<StateCell, std::vector<std::pair<int, int>>> win_state_;
+  bool is_first_turn_ai_ = false;
 public:
   Game(Lookup& l);
   std::vector<std::vector<StateCell>> board;
+  void SetFirstTurnAI(bool state) { is_first_turn_ai_ = state; }
   void ResizeBoard();
   void MouseButtonPressed(sf::Vector2f point);
   void MouseMoved(sf::Vector2f point) {};
