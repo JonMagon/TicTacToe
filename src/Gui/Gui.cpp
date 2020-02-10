@@ -27,7 +27,6 @@ void Gui::Initialize() {
   btn_default_config->SetSize(sf::Vector2f(330, kButtonDefaultHeight));
   btn_default_config->OnClick = [](Game& game, Gui& gui) {
     game.SetCellsCount(kDefaultFieldSize);
-    gui.Refresh();
   };
 
   /* Лейбл для вывода размерности поля */
@@ -41,7 +40,6 @@ void Gui::Initialize() {
   btn_reduce_field->OnClick = [](Game& game, Gui& gui) {
     if (game.GetCellsCount() > 3)
       game.SetCellsCount(game.GetCellsCount() - 1);
-      gui.Refresh();
   };
 
   /* Кнопка уменьшения размерности поля */
@@ -52,7 +50,6 @@ void Gui::Initialize() {
   btn_increase_field->OnClick = [](Game& game, Gui& gui) {
     if (game.GetCellsCount() < 10)
       game.SetCellsCount(game.GetCellsCount() + 1);
-      gui.Refresh();
   };
 
   /* Лейбл для вывода состояния игры */
@@ -64,8 +61,6 @@ void Gui::Initialize() {
   controls_["btn_reduce_field"] = btn_reduce_field;
   controls_["btn_increase_field"] = btn_increase_field;
   controls_["label_status_game"] = label_status_game;
-
-  Refresh();
 }
 
 void Gui::Refresh() {
@@ -77,10 +72,20 @@ void Gui::Refresh() {
   );
 
   /* Обновление состояния игры */
+  std::wstring state_of_game_label;
+  if (game_.IsFinished()) {
+    if (game_.GetWinner() == StateCell::X)
+      state_of_game_label = L"Выиграли крестики";
+    else if (game_.GetWinner() == StateCell::O)
+      state_of_game_label = L"Выиграли нолики";
+    else
+      state_of_game_label = L"Ничья";
+  } else {
+    state_of_game_label = L"Игра продолжается";
+  }
+
   controls_.find("label_status_game")->second->SetTitleText(
-    L"Состояние игры: " +
-    std::to_wstring(game_.GetCellsCount()) + L"x" +
-    std::to_wstring(game_.GetCellsCount())
+    L"Состояние игры: " + state_of_game_label
   );
 }
 

@@ -21,6 +21,7 @@ public:
   void MouseMoved(sf::Vector2f point) {};
   void SetCellsCount(unsigned int count);
   bool IsFinished();
+  StateCell GetWinner();
   unsigned int GetCellsCount();
 public:
   virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;

@@ -102,6 +102,9 @@ int main() {
           }
         }
 
+        // Обновление состояния GUI
+        gui.Refresh();
+
         // Отрисовка игрового поля и GUI
         window.clear(sf::Color::White);
         window.draw(game);

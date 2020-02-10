@@ -25,7 +25,13 @@ bool Game::IsFinished() {
   return lookup_.IsGameDone(board);
 }
 
+StateCell Game::GetWinner() {
+  return win_state_.first;
+}
+
 void Game::ResizeBoard() {
+  win_state_ =
+    std::make_pair(StateCell::None, std::vector<std::pair<int, int>>());
   board.clear();
   board.resize(cells_count_);
   for(int i = 0 ; i < cells_count_ ; ++i)
@@ -37,9 +43,10 @@ void Game::ResizeBoard() {
 void Game::MouseButtonPressed(sf::Vector2f point) {
   if (IsFinished()) return;
 
+  sf::Vector2f point_in_container = point - getPosition();
   // Вычисление текущей ячейки
-  unsigned int column = (point.x - kIndentFieldX) / (kFieldSizePx / cells_count_);
-  unsigned int row = (point.y - kIndentFieldY) / (kFieldSizePx / cells_count_);
+  unsigned int column = (point_in_container.x) / (kFieldSizePx / cells_count_);
+  unsigned int row = (point_in_container.y) / (kFieldSizePx / cells_count_);
 
   // Изменение статуса ячейки
   if ((row < cells_count_ && column < cells_count_) &&

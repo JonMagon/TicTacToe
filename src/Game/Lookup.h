@@ -8,13 +8,13 @@ class Lookup {
 protected:
   std::vector<std::vector<std::pair<int, int>>> winning_states_;
   std::vector<std::pair<int, int>> GetLegalMoves(
-    std::vector<std::vector<StateCell>>& board);
+      std::vector<std::vector<StateCell>>& board);
   std::vector<std::pair<int, int>> GetOccupiedPositions(
-    std::vector<std::vector<StateCell>>& board, StateCell marker);
+      std::vector<std::vector<StateCell>>& board, StateCell marker);
   bool IsBoardFull(std::vector<std::vector<StateCell>>& board);
   std::pair<bool, std::vector<std::pair<int, int>>> IsGameWon(
-    std::vector<std::vector<StateCell>>&,
-    std::vector<std::pair<int, int>>& occupied_positions);
+      std::vector<std::vector<StateCell>>&,
+      std::vector<std::pair<int, int>>& occupied_positions);
   StateCell GetOpponentMarker(StateCell marker);
   int GetBoardState(std::vector<std::vector<StateCell>>& board,
                     StateCell marker);
@@ -26,6 +26,6 @@ public:
   std::pair<StateCell, std::vector<std::pair<int, int>>>
       GetWinningPosition(std::vector<std::vector<StateCell>>& board);
   std::pair<int, std::pair<int, int>> MinimaxOptimization(
-    std::vector<std::vector<StateCell>>& board, StateCell marker, int depth,
-    int alpha, int beta);
+      std::vector<std::vector<StateCell>>& board, StateCell marker, int depth,
+      int alpha, int beta);
 };
