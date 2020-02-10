@@ -121,4 +121,31 @@ void Game::draw(sf::RenderTarget& target, sf::RenderStates states) const {
       }
     }
   }
+
+  /* Отрисовка победных состояний */
+
+  sf::Vector2i win_pos_begin(0, 0), win_pos_end(2, 2);
+
+  sf::Vector2f position_begin(cell_size_ * win_pos_begin.y + cell_size_ / 2,
+    cell_size_ * win_pos_begin.x + cell_size_ / 2);
+  sf::Vector2f position_end(cell_size_ * win_pos_end.y + cell_size_ / 2,
+    cell_size_ * win_pos_end.x + cell_size_ / 2);
+
+  sf::RectangleShape line(
+    sf::Vector2f(
+      sqrt(
+        pow(position_end.x - position_begin.x, 2) +
+        pow(position_end.y - position_begin.y, 2)
+      ),
+      kLineWidth)
+  );
+  line.setFillColor(sf::Color::Green);
+  line.setPosition(position_begin);
+
+  float rad = atan2(position_end.y - position_begin.y,
+    position_end.x - position_begin.x);
+
+  line.rotate(180 / M_PI * rad);
+
+  target.draw(line, states);
 }
