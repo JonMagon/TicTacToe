@@ -4,8 +4,11 @@
 
 // Cинглтон Майерса
 class Assets {
+private:
+	sf::Texture logo_texture_;
 public:
 	sf::Font font;
+	sf::Sprite logo;
 public:
 	static Assets& Instance() {
 		static Assets s;

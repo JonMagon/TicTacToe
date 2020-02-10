@@ -38,11 +38,11 @@ int main() {
     // Загрузка ресурсов
     Assets::Instance().Load();
 
-    const sf::Vector2u designed_size(1000,600);
+    const sf::Vector2u designed_size(kWindowWidth, kWindowHeight);
 
     // Создаем окно размером 600 на 600 и частотой обновления 60 кадров в секунду
 
-    sf::RenderWindow window(sf::VideoMode(1000, 600), "Tic-tac-toe");
+    sf::RenderWindow window(sf::VideoMode(kWindowWidth, kWindowHeight), "Tic-tac-toe");
     window.setView(calcView(window.getSize(), designed_size));
     window.setFramerateLimit(60);
 
@@ -50,7 +50,7 @@ int main() {
     Lookup lookup;
 
     Game game(lookup);
-    game.setPosition(50.f, 50.f);
+    game.setPosition(kIndentFieldX, kIndentFieldY);
 
     Gui gui(game);
 
@@ -109,6 +109,7 @@ int main() {
         window.clear(sf::Color::White);
         window.draw(game);
         window.draw(gui);
+        window.draw(Assets::Instance().logo);
         window.display();
     }
 

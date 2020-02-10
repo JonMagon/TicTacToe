@@ -30,7 +30,10 @@ endif()
 
 target_link_libraries(${PROJECT_NAME} ${SFML_LIBS})
 
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/fonts/calibri.ttf
-     DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/fonts/)
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/resources/calibri.ttf
+     DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/resources/)
+
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/resources/logo.png
+    DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/resources/)
 
 install(TARGETS ${PROJECT_NAME} DESTINATION bin)

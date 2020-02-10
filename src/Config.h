@@ -1,5 +1,8 @@
 #pragma once
 
+const int kWindowWidth = 1000;
+const int kWindowHeight = 600;
+
 const int kDefaultFieldSize = 3;	// Размер игрового поля в квадратах
 const int kFieldSizePx = 500;		// Размер игрового поля в пикселях
 const int kCellSize = 120;
@@ -9,7 +12,8 @@ const int kMarkerWidth = 5; // Толщина крестиков и нолико
 const int kIndentFieldX = 50; // Отступ перед игровым полем по X в пикселях
 const int kIndentFieldY = 50; // Отступ перед игровым полем по X в пикселях
 
-const std::string kFontPath = "fonts/calibri.ttf";
+const std::string kFontPath = "resources/calibri.ttf";
+const std::string kLogoPath = "resources/logo.png";
 const int kDefaultFontSize = 17;
 
 const int kButtonDefaultWidth = 100;
