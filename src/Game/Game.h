@@ -26,6 +26,7 @@ public:
   unsigned int GetCellsCount() { return cells_count_; }
   bool IsFinished();
   StateCell GetWinner() { return win_state_.first; }
+  bool IsPointInGameField(sf::Vector2f point);
 public:
   virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 };

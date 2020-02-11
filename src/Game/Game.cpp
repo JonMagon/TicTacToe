@@ -10,6 +10,12 @@ Game::Game(Lookup& l) : lookup_(l) {
   ResizeBoard();
 }
 
+bool Game::IsPointInGameField(sf::Vector2f point) {
+  sf::Vector2f point_in_container = point - getPosition();
+  return (point.x >= 0 && point.x <= kFieldSizePx) &&
+    (point.y >= 0 && point.y <= kFieldSizePx);
+}
+
 bool Game::IsFinished() {
   return lookup_.IsGameDone(board);
 }
@@ -25,12 +31,12 @@ void Game::ResizeBoard() {
     board[i].resize(cells_count_);
 
   if (is_first_turn_ai_) {
-    lookup_.player_marker = StateCell::O;
     lookup_.ai_marker = StateCell::X;
+    lookup_.player_marker = StateCell::O;
     board[cells_count_ / 2][cells_count_ / 2] = lookup_.ai_marker;
   } else {
-    lookup_.player_marker = StateCell::X;
     lookup_.ai_marker = StateCell::O;
+    lookup_.player_marker = StateCell::X;
   }
 }
 
@@ -140,6 +146,7 @@ void Game::draw(sf::RenderTarget& target, sf::RenderStates states) const {
       cell_size_ * (win_state_.second[board.size() - 1].first + 1)
     );
 
+    // Смещение "зачёркивания" для трёх вариантов: строка, колонка, диагональ
     if (win_state_.second[0].second ==
         win_state_.second[board.size() - 1].second) {
       position_begin += sf::Vector2f(cell_size_ / 2, 0);
@@ -150,8 +157,8 @@ void Game::draw(sf::RenderTarget& target, sf::RenderStates states) const {
       position_end -= sf::Vector2f(0, cell_size_ / 2);
     } else if (win_state_.second[0].first ==
         win_state_.second[board.size() - 1].second) {
-        position_begin += sf::Vector2f(0, cell_size_);
-        position_end -= sf::Vector2f(0, cell_size_);
+      position_begin += sf::Vector2f(0, cell_size_);
+      position_end -= sf::Vector2f(0, cell_size_);
     }
 
     sf::RectangleShape line(
@@ -162,9 +169,12 @@ void Game::draw(sf::RenderTarget& target, sf::RenderStates states) const {
         ),
         kMarkerWidth)
     );
+
+    // Цвет в зависимости от победивших фигур
     line.setFillColor(
       win_state_.first == StateCell::O ? sf::Color::Red : sf::Color::Blue
     );
+
     line.setPosition(position_begin);
 
     // Поворот "зачёркивания" на соответствующий угол

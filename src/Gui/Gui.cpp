@@ -23,7 +23,7 @@ void Gui::Initialize() {
 
   /* Кнопка сброса на стандартные настройки (Config.h) */
   auto btn_default_config = std::make_shared<Button>(
-    L"Стандартные настройки", sf::Vector2f(0, 50)
+    L"Стандартный размер поля", sf::Vector2f(0, 50)
   );
   btn_default_config->SetSize(sf::Vector2f(350, kButtonDefaultHeight));
   btn_default_config->OnClick = [](Control& me, Game& game, Gui& gui) {
@@ -62,9 +62,10 @@ void Gui::Initialize() {
     sf::Vector2f(0, 200)
   );
   checkbox_first_ai->OnClick = [](Control& me, Game& game, Gui& gui) {
-    bool is_checked = !((Checkbox*)&me)->GetCheckedState();
-    ((Checkbox*)&me)->SetCheckedState(is_checked);
-    game.SetFirstTurnAI(is_checked);
+    Checkbox& me_casted = static_cast<Checkbox&>(me);
+    bool is_checked = me_casted.GetCheckedState();
+    me_casted.SetCheckedState(!is_checked);
+    game.SetFirstTurnAI(!is_checked);
   };
 
   /* Кнопка перезапуска игры */

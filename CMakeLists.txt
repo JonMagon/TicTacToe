@@ -1,13 +1,14 @@
 cmake_minimum_required(VERSION 3.10)
 project(tictactoe)
 
+# C++17
 set(CMAKE_CXX_STANDARD 17)
 
-# SFML include/library directories
+# SFML заголовки и библиотеки
 set(SFML_INCLUDE_DIRECTORY "/usr/include" CACHE PATH "SFML include directory")
 set(SFML_LIB_DIRECTORY "/usr/lib" CACHE PATH "SFML libraries directory")
 
-# SFML libraries configuration
+# SFML конфигурация библиотек
 if(CMAKE_BUILD_TYPE MATCHES Debug)
   set(SFML_LIBS sfml-system-d sfml-window-d sfml-graphics-d)
 else()
@@ -18,8 +19,9 @@ else()
   endif()
 endif()
 
-# Find sources, add executable, link libraries
-include_directories(${SFML_INCLUDE_DIRECTORY} ${PROJECT_SOURCE_DIR} ${PROJECT_SOURCE_DIR}/src)
+# Поиск исходных кодов приложения, линковка
+include_directories(${SFML_INCLUDE_DIRECTORY} ${PROJECT_SOURCE_DIR}
+                    ${PROJECT_SOURCE_DIR}/src)
 file(GLOB SOURCES src/*.cpp src/Gui/*.cpp src/Utils/*.cpp src/Game/*.cpp)
 link_directories(${SFML_LIB_DIRECTORY})
 if(WIN32 AND CMAKE_BUILD_TYPE MATCHES Release)
