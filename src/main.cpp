@@ -40,9 +40,13 @@ int main() {
 
     const sf::Vector2u designed_size(kWindowWidth, kWindowHeight);
 
-    // Создаем окно размером 600 на 600 и частотой обновления 60 кадров в секунду
+    /* Создание окна игры */
 
-    sf::RenderWindow window(sf::VideoMode(kWindowWidth, kWindowHeight), "Tic-tac-toe");
+    // Сглаживание
+    sf::ContextSettings settings;
+    settings.antialiasingLevel = 8;
+
+    sf::RenderWindow window(sf::VideoMode(kWindowWidth, kWindowHeight), "Tic-tac-toe", sf::Style::Default, settings);
     window.setView(calcView(window.getSize(), designed_size));
     window.setFramerateLimit(60);
 

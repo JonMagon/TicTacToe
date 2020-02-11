@@ -132,13 +132,27 @@ void Game::draw(sf::RenderTarget& target, sf::RenderStates states) const {
   if (win_state_.first != StateCell::None) {
     // Преобразование победного состояния в координаты
     sf::Vector2f position_begin(
-      cell_size_ * win_state_.second[0].second + cell_size_ / 2,
-      cell_size_ * win_state_.second[0].first + cell_size_ / 2
+      cell_size_ * win_state_.second[0].second,
+      cell_size_ * win_state_.second[0].first
     );
     sf::Vector2f position_end(
-      cell_size_ * win_state_.second[board.size() - 1].second + cell_size_ / 2,
-      cell_size_ * win_state_.second[board.size() - 1].first + cell_size_ / 2
+      cell_size_ * (win_state_.second[board.size() - 1].second + 1),
+      cell_size_ * (win_state_.second[board.size() - 1].first + 1)
     );
+
+    if (win_state_.second[0].second ==
+        win_state_.second[board.size() - 1].second) {
+      position_begin += sf::Vector2f(cell_size_ / 2, 0);
+      position_end -= sf::Vector2f(cell_size_ / 2, 0);
+    } else if (win_state_.second[0].first ==
+        win_state_.second[board.size() - 1].first) {
+      position_begin += sf::Vector2f(0, cell_size_ / 2);
+      position_end -= sf::Vector2f(0, cell_size_ / 2);
+    } else if (win_state_.second[0].first ==
+        win_state_.second[board.size() - 1].second) {
+        position_begin += sf::Vector2f(0, cell_size_);
+        position_end -= sf::Vector2f(0, cell_size_);
+    }
 
     sf::RectangleShape line(
       sf::Vector2f(
