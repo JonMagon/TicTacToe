@@ -148,17 +148,20 @@ void Game::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 
     // Смещение "зачёркивания" для трёх вариантов: строка, колонка, диагональ
     if (win_state_.second[0].second ==
-        win_state_.second[board.size() - 1].second) {
-      position_begin += sf::Vector2f(cell_size_ / 2, 0);
-      position_end -= sf::Vector2f(cell_size_ / 2, 0);
+        win_state_.second[board.size() - 1].second) { // Колонка
+      position_begin += sf::Vector2f(cell_size_ / 2 + kMarkerWidth / 4, 0);
+      position_end -= sf::Vector2f(cell_size_ / 2 - kMarkerWidth / 4, 0);
     } else if (win_state_.second[0].first ==
-        win_state_.second[board.size() - 1].first) {
-      position_begin += sf::Vector2f(0, cell_size_ / 2);
-      position_end -= sf::Vector2f(0, cell_size_ / 2);
+        win_state_.second[board.size() - 1].first) { // Строка
+      position_begin += sf::Vector2f(0, cell_size_ / 2 - kMarkerWidth / 2);
+      position_end -= sf::Vector2f(0, cell_size_ / 2 + kMarkerWidth / 2);
     } else if (win_state_.second[0].first ==
-        win_state_.second[board.size() - 1].second) {
-      position_begin += sf::Vector2f(0, cell_size_);
-      position_end -= sf::Vector2f(0, cell_size_);
+        win_state_.second[board.size() - 1].second) { // Побочная диагональ
+      position_begin += sf::Vector2f(0, cell_size_ - kMarkerWidth);
+      position_end -= sf::Vector2f(0, cell_size_ + kMarkerWidth);
+    } else { // Главная диагональ
+      position_begin -= sf::Vector2f(0, kMarkerWidth / 2);
+      position_end -= sf::Vector2f(0, kMarkerWidth / 2);
     }
 
     sf::RectangleShape line(
