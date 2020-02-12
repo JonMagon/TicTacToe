@@ -9,14 +9,10 @@ set(SFML_INCLUDE_DIRECTORY "/usr/include" CACHE PATH "SFML include directory")
 set(SFML_LIB_DIRECTORY "/usr/lib" CACHE PATH "SFML libraries directory")
 
 # SFML конфигурация библиотек
-if(CMAKE_BUILD_TYPE MATCHES Debug)
-  set(SFML_LIBS sfml-system-d sfml-window-d sfml-graphics-d)
+if (WIN32)
+  set(SFML_LIBS sfml-main sfml-system sfml-window sfml-graphics)
 else()
-  if (WIN32)
-    set(SFML_LIBS sfml-main sfml-system sfml-window sfml-graphics)
-  else()
-    set(SFML_LIBS sfml-system sfml-window sfml-graphics)
-  endif()
+  set(SFML_LIBS sfml-system sfml-window sfml-graphics)
 endif()
 
 # Поиск исходных кодов приложения, линковка
