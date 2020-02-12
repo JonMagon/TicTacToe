@@ -12,8 +12,8 @@ Game::Game(Lookup& l) : lookup_(l) {
 
 bool Game::IsPointInGameField(sf::Vector2f point) {
   sf::Vector2f point_in_container = point - getPosition();
-  return (point.x >= 0 && point.x <= kFieldSizePx) &&
-    (point.y >= 0 && point.y <= kFieldSizePx);
+  return (point_in_container.x >= 0 && point_in_container.x <= kFieldSizePx) &&
+    (point_in_container.y >= 0 && point_in_container.y <= kFieldSizePx);
 }
 
 bool Game::IsFinished() {
@@ -45,8 +45,8 @@ void Game::MouseButtonPressed(sf::Vector2f point) {
 
   sf::Vector2f point_in_container = point - getPosition();
   // Вычисление текущей ячейки
-  unsigned int column = (point_in_container.x) / (kFieldSizePx / board.size());
-  unsigned int row = (point_in_container.y) / (kFieldSizePx / board.size());
+  unsigned int column = point_in_container.x / cell_size_;
+  unsigned int row = point_in_container.y / cell_size_;
 
   // Изменение статуса ячейки
   if ((row < cells_count_ && column < cells_count_) &&
