@@ -10,7 +10,7 @@ const int kLineWidth = 2; // Толщина линий игрового поля
 const int kMarkerWidth = 5; // Толщина крестиков и ноликов
 
 const int kIndentFieldX = 50; // Отступ перед игровым полем по X в пикселях
-const int kIndentFieldY = 50; // Отступ перед игровым полем по X в пикселях
+const int kIndentFieldY = 50; // Отступ перед игровым полем по Y в пикселях
 
 // Ресурсы игры
 const std::string kFontPath = "resources/calibri.ttf";
@@ -24,6 +24,6 @@ const int kCheckboxDefaultWidth = 20;
 const int kCheckboxDefaultHeight = 20;
 
 const int kMaxDepth = 4; // Максимальная глубина минимакса
-const int kWin = 1000000; // Значение победы
+const int kWin = 1000; // Значение победы
 const int kDraw = 0; // Значение ничьи
-const int kLoss = -1000000; // Значение поражения
+const int kLoss = -1000; // Значение поражения

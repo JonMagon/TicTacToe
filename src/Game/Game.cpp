@@ -27,7 +27,7 @@ void Game::ResizeBoard() {
     std::make_pair(StateCell::None, std::vector<std::pair<int, int>>());
   board.clear();
   board.resize(cells_count_);
-  for(int i = 0 ; i < cells_count_ ; ++i)
+  for (int i = 0; i < cells_count_; ++i)
     board[i].resize(cells_count_);
 
   if (is_first_turn_ai_) {
