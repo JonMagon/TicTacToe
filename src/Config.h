@@ -4,8 +4,8 @@
 const int kWindowWidth = 1000;
 const int kWindowHeight = 600;
 
-const int kDefaultFieldSize = 3;	// Размер игрового поля в квадратах
-const int kFieldSizePx = 500;		// Размер игрового поля в пикселях
+const int kDefaultFieldSize = 3; // Размер игрового поля в квадратах
+const int kFieldSizePx = 500;	// Размер игрового поля в пикселях
 const int kLineWidth = 2; // Толщина линий игрового поля
 const int kMarkerWidth = 5; // Толщина крестиков и ноликов
 
